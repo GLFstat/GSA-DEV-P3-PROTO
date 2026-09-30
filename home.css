@@ -1,0 +1,435 @@
+/* =========================================================
+   P3 HOME PROTOTYPE
+   Home screen styles
+   ========================================================= */
+
+:root {
+  --green: #58ad45;
+  --green-dark: #2e7d32;
+  --red: #c62828;
+  --charcoal: #303030;
+  --text: #363636;
+  --muted: #606060;
+  --line: #c8c8c8;
+  --surface: #ffffff;
+  --page: #f4f4f4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Calibri, Arial, sans-serif;
+  color: var(--text);
+  background: var(--page);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* =========================================================
+   PHONE / APP SHELL
+   ========================================================= */
+
+.phone-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 18px;
+}
+
+.app {
+  width: min(100%, 390px);
+  min-height: 844px;
+  background: #ffffff;
+  border: 1px solid #c9c9c9;
+  border-radius: 31px;
+  overflow: hidden;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+  position: relative;
+  padding-bottom: 78px;
+}
+
+/* =========================================================
+   HEADER IMAGE / FPO BRAND
+   ========================================================= */
+
+.hero {
+  height: 104px;
+  position: relative;
+  border-bottom: 3px solid #ffffff;
+
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.05)),
+    url("images/Home-Hdr-BG.png");
+
+  background-size: cover;
+  background-position: center 49%;
+  background-repeat: no-repeat;
+}
+
+.hero-wordmark {
+  position: absolute;
+  left: 24px;
+  top: 10px;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1.4px;
+  color: #ffffff;
+  text-shadow:
+    0 1px 1px #222222,
+    0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.hero-wordmark span {
+  color: #55b44b;
+}
+
+/* =========================================================
+   PLAYER / DATE STRIP
+   ========================================================= */
+
+.welcome-strip {
+  height: 78px;
+  background: linear-gradient(100deg, #3b3b3b, #2d2d2d);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 17px 11px;
+}
+
+.welcome-kicker {
+  font-size: 16px;
+  line-height: 1.05;
+}
+
+.player-name {
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.05;
+  margin-top: 4px;
+}
+
+.today {
+  font-size: 14px;
+  align-self: flex-start;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   HOME CONTENT
+   ========================================================= */
+
+.content {
+  padding: 11px 23px 14px;
+  display: grid;
+  gap: 11px;
+}
+
+/* START A ROUND */
+
+.start-round {
+  height: 55px;
+  border: 0;
+  border-radius: 19px;
+  background: var(--charcoal);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 21px;
+  letter-spacing: 0.5px;
+  display: grid;
+  grid-template-columns: 34px 1fr 28px;
+  align-items: center;
+  padding: 0 18px;
+  cursor: pointer;
+}
+
+.start-round .play {
+  font-size: 18px;
+}
+
+.double-chevron {
+  font-size: 25px;
+  line-height: 1;
+}
+
+/* OUTLINED HOME SECTIONS */
+
+.info-card {
+  width: 100%;
+  min-height: 74px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  text-align: left;
+  padding: 11px 38px 11px 12px;
+  position: relative;
+  cursor: pointer;
+  display: block;
+}
+
+.info-card:active,
+.start-round:active {
+  transform: translateY(1px);
+}
+
+.card-title {
+  font-family: "Arial Bold", Arial, sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.08;
+  letter-spacing: -0.4px;
+}
+
+.round-course {
+  font-size: 17px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.card-context {
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  letter-spacing: -0.25px;
+  margin-top: 4px;
+  color: #4b4b4b;
+}
+
+.card-context b {
+  font-weight: 700;
+  padding: 0 5px;
+}
+
+.chevron {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  line-height: 1;
+  color: #111111;
+}
+
+/* LAST ROUND */
+
+.last-round {
+  min-height: 84px;
+}
+
+.round-score {
+  position: absolute;
+  right: 38px;
+  top: 8px;
+  text-align: center;
+  color: #111111;
+}
+
+.round-score strong {
+  display: block;
+  font-size: 32px;
+  line-height: 0.95;
+}
+
+.round-score span {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* LAST ROUND SUMMARY */
+
+.summary-card {
+  min-height: 90px;
+  padding-top: 11px;
+}
+
+.card-title.full {
+  margin-bottom: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding-right: 5px;
+}
+
+.summary-grid > div {
+  text-align: center;
+  border-left: 1px solid #bbbbbb;
+}
+
+.summary-grid > div:first-child {
+  border-left: 0;
+}
+
+.summary-grid strong {
+  display: block;
+  font-size: 27px;
+  line-height: 1;
+  font-weight: 700;
+  color: #111111;
+}
+
+.summary-grid span {
+  display: block;
+  font-size: 16px;
+  margin-top: 5px;
+  color: #444444;
+}
+
+/* CLUBHOUSE / MY GAME / HISTORY */
+
+.text-card {
+  min-height: 78px;
+}
+
+.clubhouse-status {
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.clubhouse-status.is-clear {
+  color: var(--green-dark);
+}
+
+.clubhouse-status.needs-attention {
+  color: var(--red);
+}
+
+.feature-line {
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  margin-top: 6px;
+}
+
+/* =========================================================
+   BOTTOM NAVIGATION
+   ========================================================= */
+
+.bottom-nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 76px;
+  background: linear-gradient(100deg, #252525, #333333);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding-bottom: max(4px, env(safe-area-inset-bottom));
+  border-top: 1px solid #444444;
+}
+
+.nav-item {
+  position: relative;
+  border: 0;
+  background: transparent;
+  color: #aaaaaa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.nav-icon {
+  font-size: 31px;
+  line-height: 0.85;
+  font-weight: 700;
+}
+
+.nav-icon.bars {
+  font-size: 29px;
+}
+
+.nav-icon.trend {
+  font-size: 34px;
+  transform: rotate(-10deg);
+}
+
+.nav-item.active {
+  color: var(--green);
+}
+
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 54px;
+  height: 4px;
+  background: var(--green);
+}
+
+/* =========================================================
+   PROTOTYPE TAP MESSAGE
+   ========================================================= */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(20px);
+  background: #222222;
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.2s;
+  z-index: 5;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 430px) {
+  .phone-shell {
+    padding: 0;
+  }
+
+  .app {
+    width: 100%;
+    min-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    max-width: 430px;
+    margin: auto;
+  }
+}
+
+@media (min-width: 700px) {
+  .phone-shell {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+}
+
+
+

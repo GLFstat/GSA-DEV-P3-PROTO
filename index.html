@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2f2f2f">
+  <title>MyGolfStats – P3 Home Prototype</title>
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <main class="phone-shell">
+    <section class="app" aria-label="MyGolfStats Home Prototype">
+      <header class="hero">
+        <div class="hero-wordmark"><span>MY</span>GOLF<span>STATS</span></div>
+      </header>
+
+      <section class="welcome-strip">
+        <div>
+          <div class="welcome-kicker">Welcome back,</div>
+          <div class="player-name">Isaiah Gonzales</div>
+        </div>
+        <time class="today" datetime="2026-09-25">Sep 25, 2026</time>
+      </section>
+
+      <div class="content">
+        <button class="start-round" data-action="start-round">
+          <span class="play">▶</span><span>START A ROUND</span><span class="double-chevron">»</span>
+        </button>
+
+        <button class="info-card last-round" data-action="last-round">
+          <div class="card-copy">
+            <div class="card-title">LAST rrr ROUND</div>
+            <div class="round-course">Indian Tree GC</div>
+            <div class="card-context">9/17/26 <b>•</b> H.S.Tournament</div>
+          </div>
+          <div class="round-score"><strong>78</strong><span>(+6)</span></div>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="info-card summary-card" data-action="summary">
+          <div class="card-title full">LAST ROUND SUMMARY</div>
+          <div class="summary-grid">
+            <div><strong>53%</strong><span>FIR</span></div>
+            <div><strong>58%</strong><span>GIR</span></div>
+            <div><strong>34</strong><span>PUTTS</span></div>
+            <div><strong>1.9</strong><span>&nbsp;&nbsp;PUTTS/GIR</span></div>
+            
+          </div>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="info-card text-card" data-action="clubhouse">
+          <div class="card-copy">
+            <div class="card-title">CLUBHOUSE</div>
+            <div id="clubhouseStatus" class="clubhouse-status is-clear">You’re all caught up.</div>
+            <div id="clubhouseContext" class="card-context">Review rounds or add follow-up details.</div>
+          </div>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="info-card text-card" data-action="my-game">
+          <div class="card-copy">
+            <div class="card-title">MY GAME</div>
+            <div class="card-context feature-line">Personal SG <b>•</b> Development Insights<br>Performance Trends <b>•</b> Charts</div>
+          </div>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="info-card text-card" data-action="history">
+          <div class="card-copy">
+            <div class="card-title">HISTORY</div>
+            <div class="card-context feature-line">Rounds <b>•</b> Statistics <b>•</b> Trends <b>•</b> Charts</div>
+          </div>
+          <span class="chevron">›</span>
+        </button>
+      </div>
+
+      <nav class="bottom-nav" aria-label="Primary navigation">
+        <button class="nav-item active" data-nav="home"><span class="nav-icon">⌂</span><span>Home</span></button>
+        <button class="nav-item" data-nav="clubhouse"><span class="nav-icon">⌂</span><span>Clubhouse</span></button>
+        <button class="nav-item" data-nav="history"><span class="nav-icon bars">▥</span><span>History</span></button>
+        <button class="nav-item" data-nav="my-game"><span class="nav-icon trend">⌁</span><span>My Game</span></button>
+      </nav>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="home.js"></script>
+</body>
+</html>
