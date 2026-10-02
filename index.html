@@ -2,89 +2,535 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
   <meta name="theme-color" content="#2f2f2f">
-  <title>MyGolfStats – P3 Home Prototype</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black"
+  >
+  <title>MyGolfStats – P3 Prototype</title>
   <link rel="stylesheet" href="home.css">
 </head>
 <body>
   <main class="phone-shell">
-    <section class="app" aria-label="MyGolfStats Home Prototype">
-      <header class="hero">
-        <div class="hero-wordmark"><span>MY</span>GOLF<span>STATS</span></div>
-      </header>
-
-      <section class="welcome-strip">
-        <div>
-          <div class="welcome-kicker">Welcome back,</div>
-          <div class="player-name">Isaiah Gonzales</div>
+    <section
+      class="app"
+      aria-label="MyGolfStats P3 Prototype"
+    >
+      <!-- =====================================================
+           HOME SCREEN
+           ===================================================== -->
+      <section
+        id="homeScreen"
+        class="screen screen-active"
+        aria-label="Home"
+      >
+        <header class="hero">
+          <div class="hero-wordmark">
+            <span>MY</span>GOLF<span>STATS</span>
+          </div>
+        </header>
+        <section class="welcome-strip">
+          <div>
+            <div class="welcome-kicker">
+              Welcome back,
+            </div>
+            <div class="player-name">
+              Isaiah Gonzales
+            </div>
+          </div>
+          <time
+            class="today"
+            datetime="2026-09-30"
+          >
+            Sep 30, 2026
+          </time>
+        </section>
+        <div class="content">
+          <button
+            class="start-round"
+            data-action="start-round"
+            type="button"
+          >
+            <span>START A NEW ROUND </span>
+            <span class="double-chevron">»</span>
+          </button>
+          <!-- LAST ROUND -->
+          <button
+            class="info-card last-round"
+            data-action="last-round"
+            type="button"
+          >
+            <div class="card-copy">
+              <div class="card-title">
+                YOUR LAST ROUND
+              </div>
+              <div class="round-course">
+                Indian Tree GC
+              </div>
+              <div class="card-context">
+                9/17/26 <b>•</b> H.S. Tournament
+              </div>
+            </div>
+            <div class="round-score">
+              <strong>78</strong>
+              <span>(+6)</span>
+            </div>
+            <span class="chevron">»</span>
+          </button>
+          <!-- LAST ROUND SUMMARY -->
+          <button
+            class="info-card summary-card"
+            data-action="summary"
+            type="button"
+          >
+            <div class="card-title full">
+              LAST ROUND SUMMARY
+            </div>
+            <div class="summary-grid">
+              <div>
+                <strong>53%</strong>
+                <span>FIR</span>
+              </div>
+              <div>
+                <strong>58%</strong>
+                <span>GIR</span>
+              </div>
+              <div>
+                <strong>34</strong>
+                <span>PUTTS</span>
+              </div>
+              <div>
+                <strong>1.9</strong>
+                <span>&nbsp;&nbsp;PUTTS/GIR</span>
+              </div>
+            </div>
+            <span class="setup-chevron">»</span>
+          </button>
+          <!-- CLUBHOUSE -->
+          <button
+            class="info-card text-card"
+            data-action="clubhouse"
+            type="button"
+          >
+            <div class="card-copy">
+              <div class="card-title">
+                CLUBHOUSE
+              </div>
+              <div
+                id="clubhouseStatus"
+                class="clubhouse-status is-clear"
+              >
+                You’re all caught up.
+              </div>
+              <div
+                id="clubhouseContext"
+                class="card-context"
+              >
+                Review rounds or add follow-up details.
+              </div>
+            </div>
+            <span class="chevron">»</span>
+          </button>
+          <!-- MY GAME -->
+          <button
+            class="info-card text-card"
+            data-action="my-game"
+            type="button"
+          >
+            <div class="card-copy">
+              <div class="card-title">
+                MY GAME
+              </div>
+              <div class="card-context feature-line">
+                Personal SG <b>•</b> Development Insights
+                <br>
+                Performance Trends <b>•</b> Charts
+              </div>
+            </div>
+            <span class="chevron">»</span>
+          </button>
+          <!-- HISTORY -->
+          <button
+            class="info-card text-card"
+            data-action="history"
+            type="button"
+          >
+            <div class="card-copy">
+              <div class="card-title">
+                HISTORY
+              </div>
+              <div class="card-context feature-line">
+                Rounds <b>•</b> Statistics <b>•</b>
+                Trends <b>•</b> Charts
+              </div>
+            </div>
+            <span class="chevron">»</span>
+          </button>
         </div>
-        <time class="today" datetime="2026-09-25">Sep 25, 2026</time>
       </section>
-
-      <div class="content">
-        <button class="start-round" data-action="start-round">
-          <span class="play">▶</span><span>START A ROUND</span><span class="double-chevron">»</span>
-        </button>
-
-        <button class="info-card last-round" data-action="last-round">
-          <div class="card-copy">
-            <div class="card-title">LAST ROUND</div>
-            <div class="round-course">Indian Tree GC</div>
-            <div class="card-context">9/17/26 <b>•</b> H.S.Tournament</div>
+      <!-- =====================================================
+     ROUND SETUP SCREEN
+     ===================================================== -->
+<section
+  id="roundSetupScreen"
+  class="screen"
+  aria-label="Round Setup"
+  hidden
+>
+  <!-- TOP BAR -->
+  <header class="setup-header">
+    <button
+      id="setupBackBtn"
+      class="setup-back"
+      type="button"
+      aria-label="Back to Home"
+    >
+      «
+    </button>
+    <div class="setup-heading">
+      <div class="setup-kicker">
+        START A ROUND
+      </div>
+      <div class="setup-title">
+        Round Setup
+      </div>
+    </div>
+  </header>
+  <div class="setup-content">
+    <!-- ROUND TYPE -->
+    <section class="setup-section">
+      <label
+        class="setup-section-title"
+        for="roundTypeSelect"
+      >
+        ROUND TYPE
+      </label>
+      <div class="select-wrap">
+        <select
+          id="roundTypeSelect"
+          class="setup-select is-unselected"
+        >
+          <option value="" selected>
+            Select Round Type
+          </option>
+          <option value="practice">
+            Practice Round
+          </option>
+          <option value="jr-pga">
+            Jr PGA Tournament
+          </option>
+          <option value="ajga">
+            AJGA Tournament
+          </option>
+          <option value="high-school">
+            High School Tournament
+          </option>
+          <option value="other">
+            Other Event
+          </option>
+        </select>
+      </div>
+    </section>
+    <!-- ROUND LENGTH -->
+    <section class="setup-section">
+      <label
+        class="setup-section-title"
+        for="roundLengthSelect"
+      >
+        ROUND LENGTH
+      </label>
+      <div class="select-wrap">
+        <select
+          id="roundLengthSelect"
+          class="setup-select"
+        >
+          <option value="" selected>
+            Select number of Holes
+          </option>
+          <option value="9">
+            9 Holes
+          </option>
+          <option value="18">
+            18 Holes
+          </option>
+        </select>
+      </div>
+    </section>
+    <!-- COURSE -->
+    <section class="setup-section">
+      <div class="setup-section-title">
+        COURSE
+      </div>
+      <button
+        id="courseSelectBtn"
+        class="setup-card course-card needs-selection"
+        type="button"
+      >
+        <div>
+          <div class="setup-card-primary">
+            Select Course
           </div>
-          <div class="round-score"><strong>78</strong><span>(+6)</span></div>
-          <span class="chevron">›</span>
-        </button>
-
-        <button class="info-card summary-card" data-action="summary">
-          <div class="card-title full">LAST ROUND SUMMARY</div>
-          <div class="summary-grid">
-            <div><strong>53%</strong><span>FIR</span></div>
-            <div><strong>58%</strong><span>GIR</span></div>
-            <div><strong>34</strong><span>PUTTS</span></div>
-            <div><strong>1.9</strong><span>&nbsp;&nbsp;PUTTS/GIR</span></div>
-            
+          <div class="setup-card-secondary">
+            Search by course name and location
           </div>
-          <span class="chevron">›</span>
-        </button>
-
-        <button class="info-card text-card" data-action="clubhouse">
-          <div class="card-copy">
-            <div class="card-title">CLUBHOUSE</div>
-            <div id="clubhouseStatus" class="clubhouse-status is-clear">You’re all caught up.</div>
-            <div id="clubhouseContext" class="card-context">Review rounds or add follow-up details.</div>
+        </div>
+        <span class="setup-chevron">»</span>
+      </button>
+      <div
+        id="courseSearchPanel"
+        class="course-search-panel"
+        hidden
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="courseSearchTitle"
+      >
+        <div class="course-search-header">
+          <div>
+            <div id="courseSearchTitle" class="course-search-title">
+              Select Course
+            </div>
+            <div class="course-search-subtitle">
+              Search OpenGolfAPI
+            </div>
           </div>
-          <span class="chevron">›</span>
-        </button>
-
-        <button class="info-card text-card" data-action="my-game">
-          <div class="card-copy">
-            <div class="card-title">MY GAME</div>
-            <div class="card-context feature-line">Personal SG <b>•</b> Development Insights<br>Performance Trends <b>•</b> Charts</div>
+          <button
+            id="courseSearchCloseBtn"
+            class="course-search-close"
+            type="button"
+            aria-label="Close course search"
+          >
+            ×
+          </button>
+        </div>
+        <label class="course-search-label" for="courseSearchInput">
+          COURSE NAME OR LOCATION
+        </label>
+        <input
+          id="courseSearchInput"
+          class="setup-input course-search-input"
+          type="search"
+          placeholder="e.g. Rolling Hills or Denver"
+          autocomplete="off"
+          enterkeyhint="search"
+        >
+        <div
+          id="courseSearchStatus"
+          class="course-search-status"
+          aria-live="polite"
+        >
+          Type at least 2 characters to search.
+        </div>
+        <div
+          id="courseSearchResults"
+          class="course-search-results"
+        ></div>
+      </div>
+    </section>
+<!-- TEES -->
+    <section id="teeSection" class="setup-section tee-section needs-selection" hidden>
+      <label
+        class="setup-section-title"
+        for="teeSelect"
+      >
+        TEES
+      </label>
+      <div class="select-wrap">
+        <select
+          id="teeSelect"
+          class="setup-select is-unselected"
+          disabled
+        >
+          <option value="" selected>
+            Select Tees
+          </option>
+        </select>
+      </div>
+    </section>
+    <!-- COURSE DETAILS -->
+    <section class="setup-section">
+      <div class="setup-section-title">
+        COURSE DETAILS
+      </div>
+      <div class="course-data-card">
+        <div class="course-data-status-row">
+          <div>
+            <div class="course-data-label">
+              Course Data
+            </div>
+            <div
+              id="courseDataStatus"
+              class="course-data-status"
+            >
+              Not retrieved
+            </div>
           </div>
-          <span class="chevron">›</span>
-        </button>
-
-        <button class="info-card text-card" data-action="history">
-          <div class="card-copy">
-            <div class="card-title">HISTORY</div>
-            <div class="card-context feature-line">Rounds <b>•</b> Statistics <b>•</b> Trends <b>•</b> Charts</div>
+          <span
+            id="courseDataIndicator"
+            class="status-dot"
+            aria-hidden="true"
+          ></span>
+        </div>
+        <div class="course-data-grid">
+          <div>
+            <span>HOLES</span>
+            <strong id="courseHoles">—</strong>
           </div>
-          <span class="chevron">›</span>
+          <div>
+            <span>YARDAGE</span>
+            <strong id="courseYardage">—</strong>
+          </div>
+          <div>
+            <span>PAR</span>
+            <strong id="coursePar">—</strong>
+          </div>
+          <div>
+            <span>RATING / SLOPE</span>
+            <strong id="courseRatingSlope">—</strong>
+          </div>
+        </div>
+        <div
+          id="holeDataMessage"
+          class="hole-data-message"
+        >
+          Choose a course and tees to retrieve
+          hole yardages, pars, rating and slope.
+        </div>
+        <button
+          id="editHoleYardagesBtn"
+          class="text-action"
+          type="button"
+        >
+          Edit Hole Yardages »
         </button>
       </div>
-
-      <nav class="bottom-nav" aria-label="Primary navigation">
-        <button class="nav-item active" data-nav="home"><span class="nav-icon">⌂</span><span>Home</span></button>
-        <button class="nav-item" data-nav="clubhouse"><span class="nav-icon">⌂</span><span>Clubhouse</span></button>
-        <button class="nav-item" data-nav="history"><span class="nav-icon bars">▥</span><span>History</span></button>
-        <button class="nav-item" data-nav="my-game"><span class="nav-icon trend">⌁</span><span>My Game</span></button>
+    </section>
+    <!-- COMPETITION NAME -->
+    <section class="setup-section" hidden>
+      <div class="setup-section-heading-row">
+        <label
+          class="setup-section-title"
+          for="competitionName"
+        >
+          COMPETITION NAME
+        </label>
+        <div class="optional-label">
+          OPTIONAL
+        </div>
+      </div>
+      <input
+        id="competitionName"
+        class="setup-input"
+        type="text"
+        placeholder="Event or competition name"
+        autocomplete="off"
+      >
+    </section>
+    <!-- STARTING HOLE -->
+    <section id="startingHoleSection" class="setup-section">
+      <label
+        class="setup-section-title"
+        for="startingHoleSelect"
+      >
+        STARTING HOLE
+      </label>
+      <div class="select-wrap">
+        <select
+          id="startingHoleSelect"
+          class="setup-select is-unselected"
+        >
+          <option value="" selected>Select Starting Hole</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+        </select>
+      </div>
+    </section>
+    <!-- START ROUND -->
+    <section class="setup-start-area">
+<button
+  id="beginRoundBtn"
+  class="begin-round"
+  type="button"
+>
+  <span class="start-round-label">START ROUND</span>
+  <span class="start-round-arrow">»</span>
+</button>
+      <p class="setup-note">
+        Missing course details can be<br>&#x20;
+        added during or after the round.
+      </p>
+    </section>
+  </div>
+</section>
+      <!-- =====================================================
+           BOTTOM NAV
+           ===================================================== -->
+      <nav
+        id="bottomNav"
+        class="bottom-nav"
+        aria-label="Primary navigation"
+      >
+        <button
+          class="nav-item active"
+          data-nav="home"
+          type="button"
+        >
+          <span class="nav-icon">⌂</span>
+          <span>Home</span>
+        </button>
+        <button
+          class="nav-item"
+          data-nav="clubhouse"
+          type="button"
+        >
+          <span class="nav-icon">⌂</span>
+          <span>Clubhouse</span>
+        </button>
+        <button
+          class="nav-item"
+          data-nav="history"
+          type="button"
+        >
+          <span class="nav-icon bars">▥</span>
+          <span>History</span>
+        </button>
+        <button
+          class="nav-item"
+          data-nav="my-game"
+          type="button"
+        >
+          <span class="nav-icon trend">⌁</span>
+          <span>My Game</span>
+        </button>
       </nav>
     </section>
   </main>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="home.js"></script>
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+  <script src="js/home.js"></script>
 </body>
 </html>
