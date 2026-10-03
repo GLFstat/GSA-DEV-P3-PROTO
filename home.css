@@ -11,7 +11,7 @@
   --muted: #606060;
   --line: #c8c8c8;
   --surface: #ffffff;
-  --page: #f4f4f4;
+  --page: #f0f0f0;
 }
 * {
   box-sizing: border-box;
@@ -41,7 +41,7 @@ button {
 .app {
   width: min(100%, 390px);
   min-height: 844px;
-  background: #ffffff;
+  background: var(--page);
   border: 1px solid #c9c9c9;
   border-radius: 31px;
   overflow: hidden;
@@ -234,7 +234,7 @@ button {
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding-right: 5px;
+  padding-left: 10px;
 }
 .summary-grid > div {
   text-align: center;
@@ -412,7 +412,7 @@ button {
   justify-content: center;
   border: 1px solid #ffffff;
   border-radius: 8px;
-  background: var(--green);
+  background: none;
   color: #ffffff;
   font-family: Arial, sans-serif;
   font-size: 28px;
@@ -438,7 +438,7 @@ button {
 /* SETUP CONTENT */
 .setup-content {
   padding: 20px 18px 0;
-  background: var(--surface);
+  background: var(--page);
 }
 .setup-section { margin-bottom: 25px; }
 .setup-section-title {
