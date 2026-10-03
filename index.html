@@ -405,7 +405,7 @@
           class="text-action"
           type="button"
         >
-          Edit Hole Yardages »
+          Edit Course Data »
         </button>
       </div>
     </section>
@@ -482,6 +482,67 @@
     </section>
   </div>
 </section>
+      <!-- =====================================================
+           COURSE DATA SCREEN
+           ===================================================== -->
+      <section
+        id="courseDataScreen"
+        class="screen"
+        aria-label="Course Data"
+        hidden
+      >
+        <header class="setup-header course-data-header">
+          <button
+            id="courseDataBackBtn"
+            class="setup-back"
+            type="button"
+            aria-label="Back to Round Setup"
+          >
+            «
+          </button>
+          <div class="setup-heading">
+            <div class="setup-kicker">ROUND DATA</div>
+            <div class="setup-title">Course Data</div>
+          </div>
+        </header>
+        <div class="setup-content course-data-content">
+          <section class="setup-section">
+            <div class="setup-section-title">COURSE PROFILE</div>
+            <div class="course-profile-card">
+              <div class="course-profile-name" id="courseDataCourseName">—</div>
+              <div class="course-profile-location" id="courseDataCourseLocation">—</div>
+              <div class="course-profile-grid">
+                <div><span>TEES</span><strong id="courseDataTeeName">—</strong></div>
+                <div><span>PROFILE YARDAGE</span><strong id="courseDataProfileYardage">—</strong></div>
+                <div><span>PAR</span><strong id="courseDataProfilePar">—</strong></div>
+                <div><span>RATING / SLOPE</span><strong id="courseDataProfileRatingSlope">—</strong></div>
+              </div>
+            </div>
+          </section>
+          <section class="setup-section">
+            <div class="course-data-editor-heading">
+              <div>
+                <div class="setup-section-title">HOLE DATA</div>
+                <div class="course-data-confirmed" id="courseDataConfirmed">0 of 18 holes confirmed</div>
+              </div>
+              <div class="course-data-check-heading">CHECK HOLE<br>TO SAVE</div>
+            </div>
+            <div class="course-hole-table-wrap">
+              <div class="course-hole-table" id="courseHoleTable"></div>
+            </div>
+            <div class="course-hole-total" id="courseHoleTotal">
+              <span>TOTAL</span>
+              <strong id="courseDataTotalPar">—</strong>
+              <strong id="courseDataTotalYards">—</strong>
+              <span class="course-total-label">PAR</span>
+              <span class="course-total-label">YARDS</span>
+            </div>
+          </section>
+          <p class="course-data-note">
+            Course information is used for this round. Changes here do not alter the master course profile.
+          </p>
+        </div>
+      </section>
       <!-- =====================================================
            BOTTOM NAV
            ===================================================== -->

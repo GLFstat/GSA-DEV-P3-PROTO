@@ -19,6 +19,7 @@ const roundSetupScreen = document.getElementById('roundSetupScreen');
 const bottomNav = document.getElementById('bottomNav');
 const setupBackBtn = document.getElementById('setupBackBtn');
 function showHome() {
+  courseDataScreen.hidden = true;
   roundSetupScreen.hidden = true;
   homeScreen.hidden = false;
   bottomNav.hidden = false;
@@ -28,6 +29,7 @@ function showHome() {
   });
 }
 function showRoundSetup() {
+  courseDataScreen.hidden = true;
   homeScreen.hidden = true;
   roundSetupScreen.hidden = false;
   bottomNav.hidden = true;
@@ -213,6 +215,7 @@ async function selectCourse(course) {
   selectedCourse = course;
   selectedTees = [];
   selectedHoles = [];
+  courseDataConfirmedRows.clear();
   courseSelectBtn.classList.remove('needs-selection');
   courseSelectBtn.classList.add('is-selected');
   closeCourseSearch();
@@ -569,13 +572,238 @@ function calculateCoursePar() {
   return total || null;
 }
 /* =========================================================
-   EDIT HOLE YARDAGES
+   COURSE DATA EDITOR
    ========================================================= */
-document
-  .getElementById('editHoleYardagesBtn')
-  .addEventListener('click', () => {
-    showToast('Edit Hole Yardages — prototype destination');
+const courseDataScreen = document.getElementById('courseDataScreen');
+const courseDataBackBtn = document.getElementById('courseDataBackBtn');
+const courseHoleTable = document.getElementById('courseHoleTable');
+const courseDataConfirmed = document.getElementById('courseDataConfirmed');
+const courseDataTotalPar = document.getElementById('courseDataTotalPar');
+const courseDataTotalYards = document.getElementById('courseDataTotalYards');
+const courseDataCourseName = document.getElementById('courseDataCourseName');
+const courseDataCourseLocation = document.getElementById('courseDataCourseLocation');
+const courseDataTeeName = document.getElementById('courseDataTeeName');
+const courseDataProfileYardage = document.getElementById('courseDataProfileYardage');
+const courseDataProfilePar = document.getElementById('courseDataProfilePar');
+const courseDataProfileRatingSlope = document.getElementById('courseDataProfileRatingSlope');
+let courseDataReturnScreen = 'roundSetup';
+let courseDataConfirmedRows = new Set();
+
+function getHoleValue(hole, keys) {
+  for (const key of keys) {
+    if (hole && hole[key] != null && hole[key] !== '') return hole[key];
+  }
+  return '';
+}
+
+function getCourseHoleRows() {
+  return Array.isArray(selectedHoles) ? selectedHoles : [];
+}
+
+function initializeCourseDataConfirmations() {
+  const holes = getCourseHoleRows();
+  if (!holes.length) {
+    courseDataConfirmedRows.clear();
+    return;
+  }
+  const validHoleNumbers = new Set();
+  holes.forEach((hole, index) => {
+    const holeNumber = Number(getHoleValue(hole, ['hole','hole_number','number'])) || index + 1;
+    validHoleNumbers.add(holeNumber);
   });
+  courseDataConfirmedRows = new Set(
+    [...courseDataConfirmedRows].filter(number => validHoleNumbers.has(number))
+  );
+  validHoleNumbers.forEach(number => {
+    const hole = holes.find((item, index) => {
+      const itemNumber = Number(getHoleValue(item, ['hole','hole_number','number'])) || index + 1;
+      return itemNumber === number;
+    });
+    const par = getHolePar(hole);
+    const yards = getHoleYardage(hole);
+    if (par !== '' && yards !== '') {
+      courseDataConfirmedRows.add(number);
+    }
+  });
+}
+
+function getSelectedTeeForEditor() {
+  return getSelectedTee();
+}
+
+function getSelectedTeeColor() {
+  const tee = getSelectedTeeForEditor() || {};
+  return String(tee.tee_color || '').trim().toLowerCase();
+}
+
+function getHolePar(hole) {
+  if (hole && hole.__courseDataDraftPar !== undefined) {
+    return hole.__courseDataDraftPar;
+  }
+  return getHoleValue(hole, ['par', 'hole_par']);
+}
+
+function getHoleYardage(hole) {
+  if (hole && hole.__courseDataDraftYardage !== undefined) {
+    return hole.__courseDataDraftYardage;
+  }
+  if (hole && hole.__courseDataYardage !== undefined) {
+    return hole.__courseDataYardage;
+  }
+  const teeColor = getSelectedTeeColor();
+  if (hole && hole.yardages && teeColor && hole.yardages[teeColor] != null) {
+    return hole.yardages[teeColor];
+  }
+  return getHoleValue(hole, ['yardage', 'yards', 'distance', 'hole_yardage']);
+}
+
+function openCourseData(returnScreen = 'roundSetup') {
+  courseDataReturnScreen = returnScreen;
+  courseDataScreen.hidden = false;
+  roundSetupScreen.hidden = true;
+  homeScreen.hidden = true;
+  bottomNav.hidden = true;
+  initializeCourseDataConfirmations();
+  renderCourseDataEditor();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function closeCourseData() {
+  courseDataScreen.hidden = true;
+  if (courseDataReturnScreen === 'home') {
+    showHome();
+    return;
+  }
+  showRoundSetup();
+}
+
+courseDataBackBtn.addEventListener('click', closeCourseData);
+
+document.getElementById('editHoleYardagesBtn').addEventListener('click', () => {
+  openCourseData('roundSetup');
+});
+
+function renderCourseDataEditor() {
+  const course = selectedCourse || {};
+  const tee = getSelectedTeeForEditor() || {};
+  const holes = getCourseHoleRows();
+  courseDataCourseName.textContent = course.name || course.course_name || 'Selected Course';
+  courseDataCourseLocation.textContent = [course.city, course.state].filter(Boolean).join(', ') || '—';
+  courseDataTeeName.textContent = tee.tee_name || tee.name || 'Selected Tees';
+  const profileYardage = tee.yardage ?? tee.yards ?? calculateHoleYardageTotal();
+  courseDataProfileYardage.textContent = profileYardage != null && profileYardage !== '' ? Number(profileYardage).toLocaleString() : '—';
+  const profilePar = tee.par ?? calculateCoursePar();
+  courseDataProfilePar.textContent = profilePar != null ? profilePar : '—';
+  const rating = tee.course_rating ?? tee.rating ?? null;
+  const slope = tee.slope ?? null;
+  courseDataProfileRatingSlope.textContent = rating != null && slope != null ? `${rating} / ${slope}` : '—';
+  if (!holes.length) {
+    courseHoleTable.innerHTML = '<div class="hole-data-message">No hole data is currently available for this course.</div>';
+    updateCourseDataTotals();
+    return;
+  }
+  courseHoleTable.innerHTML = holes.map((hole, index) => {
+    const holeNumber = Number(getHoleValue(hole, ['hole','hole_number','number'])) || index + 1;
+    const par = getHolePar(hole);
+    const yards = getHoleYardage(hole);
+    const confirmed = courseDataConfirmedRows.has(holeNumber);
+    const edited = hole.__courseDataEdited === true;
+    const rowClass = [
+      'course-hole-row',
+      edited ? 'is-edited' : '',
+      !confirmed ? 'is-needs-confirmation' : ''
+    ].filter(Boolean).join(' ');
+    return `
+      <div class="${rowClass}" data-hole-number="${holeNumber}">
+        <div class="course-hole-number">${holeNumber}</div>
+        <div class="course-hole-field">
+          <input class="course-hole-par" type="number" min="1" max="9" inputmode="numeric" value="${escapeHtml(par)}" aria-label="Hole ${holeNumber} par">
+        </div>
+        <div class="course-hole-field">
+          <input class="course-hole-yards" type="number" min="1" max="999" inputmode="numeric" value="${escapeHtml(yards)}" aria-label="Hole ${holeNumber} yards">
+        </div>
+        <button class="course-hole-check ${confirmed ? 'is-confirmed' : ''}" type="button" aria-label="${confirmed ? 'Confirmed' : 'Check hole to save'}">${confirmed ? '✓' : '✓'}</button>
+      </div>`;
+  }).join('');
+  courseHoleTable.querySelectorAll('.course-hole-row').forEach(row => {
+    const holeNumber = Number(row.dataset.holeNumber);
+    row.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', () => {
+        const hole = holes.find((item, index) => (Number(getHoleValue(item, ['hole','hole_number','number'])) || index + 1) === holeNumber);
+        if (!hole) return;
+        hole.__courseDataEdited = true;
+        const parInput = row.querySelector('.course-hole-par');
+        const yardsInput = row.querySelector('.course-hole-yards');
+        hole.__courseDataDraftPar = parInput.value.trim();
+        hole.__courseDataDraftYardage = yardsInput.value.trim();
+        courseDataConfirmedRows.delete(holeNumber);
+        row.classList.add('is-edited','is-needs-confirmation');
+        row.querySelector('.course-hole-check').classList.remove('is-confirmed');
+        updateCourseDataTotals();
+      });
+    });
+    row.querySelector('.course-hole-check').addEventListener('click', () => {
+      const hole = holes.find((item, index) => (Number(getHoleValue(item, ['hole','hole_number','number'])) || index + 1) === holeNumber);
+      if (!hole) return;
+      const parInput = row.querySelector('.course-hole-par');
+      const yardsInput = row.querySelector('.course-hole-yards');
+      if (parInput.value.trim() === '' || yardsInput.value.trim() === '') {
+        showToast('Enter Par and Yards before saving this hole');
+        return;
+      }
+      hole.par = Number(parInput.value);
+      hole.__courseDataYardage = Number(yardsInput.value);
+      delete hole.__courseDataDraftPar;
+      delete hole.__courseDataDraftYardage;
+      hole.__courseDataEdited = false;
+      courseDataConfirmedRows.add(holeNumber);
+      row.classList.remove('is-needs-confirmation');
+      row.classList.add('is-edited');
+      row.querySelector('.course-hole-check').classList.add('is-confirmed');
+      updateCourseDataTotals();
+      updateRoundSetupCourseDetails();
+      showToast(`Hole ${holeNumber} saved`);
+    });
+  });
+  updateCourseDataTotals();
+}
+
+function calculateHoleYardageTotal() {
+  const holes = getCourseHoleRows();
+  const total = holes.reduce((sum, hole) => {
+    const value = Number(getHoleYardage(hole));
+    return Number.isFinite(value) ? sum + value : sum;
+  }, 0);
+  return total || null;
+}
+
+function updateCourseDataTotals() {
+  const holes = getCourseHoleRows();
+  let parTotal = 0;
+  let yardTotal = 0;
+  let parCount = 0;
+  let yardCount = 0;
+  holes.forEach((hole, index) => {
+    const par = Number(getHolePar(hole));
+    const yards = Number(getHoleYardage(hole));
+    if (Number.isFinite(par)) { parTotal += par; parCount++; }
+    if (Number.isFinite(yards)) { yardTotal += yards; yardCount++; }
+  });
+  courseDataTotalPar.textContent = parCount ? parTotal : '—';
+  courseDataTotalYards.textContent = yardCount ? yardTotal.toLocaleString() : '—';
+  courseDataConfirmed.textContent = `${courseDataConfirmedRows.size} of ${holes.length || 18} holes confirmed`;
+}
+
+function updateRoundSetupCourseDetails() {
+  const tee = getSelectedTeeForEditor();
+  if (!tee) return;
+  const holeTotal = calculateHoleYardageTotal();
+  const parTotal = calculateCoursePar();
+  courseHoles.textContent = selectedHoles.length || '—';
+  courseYardage.textContent = tee.yardage != null ? Number(tee.yardage).toLocaleString() : (holeTotal || '—');
+  coursePar.textContent = tee.par != null ? tee.par : (parTotal || '—');
+}
+
 /* =========================================================
    START ROUND
    ========================================================= */
