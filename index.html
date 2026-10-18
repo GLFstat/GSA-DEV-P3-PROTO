@@ -31,9 +31,10 @@
       >
         <header class="hero">
           <div class="hero-wordmark">
-            <span>MY</span>GOLF<span>STATS</span>
+            <img src="images/-1-Logo+tag.png" alt="MyGolfStats">
           </div>
         </header>
+
         <section class="welcome-strip">
           <div>
             <div class="welcome-kicker">
@@ -59,6 +60,8 @@
             <span>START A NEW ROUND </span>
             <span class="double-chevron">»</span>
           </button>
+          <div class="home-card-group recent-group">
+            <div class="recent-round-heading" role="heading" aria-level="2"><span>RECENT ROUND<br>PERFORMANCE SUMMARY</span></div>
           <!-- LAST ROUND -->
           <button
             class="info-card last-round"
@@ -67,7 +70,7 @@
           >
             <div class="card-copy">
               <div class="card-title">
-                YOUR LAST ROUND
+                YOUR LAST ROUND <span class="card-title-chevron" aria-hidden="true">»»</span>
               </div>
               <div class="round-course">
                 Indian Tree GC
@@ -80,7 +83,7 @@
               <strong>78</strong>
               <span>(+6)</span>
             </div>
-            <span class="chevron">»</span>
+            
           </button>
           <!-- LAST ROUND SUMMARY -->
           <button
@@ -89,16 +92,16 @@
             type="button"
           >
             <div class="card-title full">
-              LAST ROUND SUMMARY
+              LAST ROUND SUMMARY <span class="card-title-chevron" aria-hidden="true">»»</span>
             </div>
             <div class="summary-grid">
               <div>
-                <strong>53%</strong>
-                <span>FIR</span>
+                <strong>53%&nbsp;&nbsp;</strong>
+                <span>FIR&nbsp;&nbsp;</span>
               </div>
               <div>
-                <strong>58%</strong>
-                <span>GIR</span>
+                <strong>&nbsp;&nbsp;58%&nbsp;&nbsp;</strong>
+                <span>&nbsp;&nbsp;GIR&nbsp;&nbsp;</span>
               </div>
               <div>
                 <strong>34</strong>
@@ -109,8 +112,11 @@
                 <span>&nbsp;&nbsp;PUTTS/GIR</span>
               </div>
             </div>
-            <span class="setup-chevron">»</span>
+            
           </button>
+          </div>
+          <div class="home-card-group overall-group">
+            <div class="overall-heading" role="heading" aria-level="2"><span>YOUR GOLF GAME<br><small>OVERALL PERFORMANCE &amp; HISTORY</small></span></div>
           <!-- CLUBHOUSE -->
           <button
             class="info-card text-card"
@@ -119,7 +125,7 @@
           >
             <div class="card-copy">
               <div class="card-title">
-                CLUBHOUSE
+                CLUBHOUSE <span class="card-title-chevron" aria-hidden="true">»»</span>
               </div>
               <div
                 id="clubhouseStatus"
@@ -134,7 +140,7 @@
                 Review rounds or add follow-up details.
               </div>
             </div>
-            <span class="chevron">»</span>
+            
           </button>
           <!-- MY GAME -->
           <button
@@ -144,7 +150,7 @@
           >
             <div class="card-copy">
               <div class="card-title">
-                MY GAME
+                MY GAME <span class="card-title-chevron" aria-hidden="true">»»</span>
               </div>
               <div class="card-context feature-line">
                 Personal SG <b>•</b> Development Insights
@@ -152,7 +158,7 @@
                 Performance Trends <b>•</b> Charts
               </div>
             </div>
-            <span class="chevron">»</span>
+            
           </button>
           <!-- HISTORY -->
           <button
@@ -162,15 +168,63 @@
           >
             <div class="card-copy">
               <div class="card-title">
-                HISTORY
+                HISTORY <span class="card-title-chevron" aria-hidden="true">»»</span>
               </div>
               <div class="card-context feature-line">
                 Rounds <b>•</b> Statistics <b>•</b>
                 Trends <b>•</b> Charts
               </div>
             </div>
-            <span class="chevron">»</span>
+            
           </button>
+          </div>
+        </div>
+      </section>
+      <!-- ACTIVE ROUND RECOVERY — shown only on launch with saved data -->
+      <section id="roundRecoveryScreen" class="screen recovery-screen" aria-label="Active round recovery" hidden>
+        <header class="setup-header"><div class="setup-heading"><div class="setup-kicker">ROUND RECOVERY</div><div class="setup-title">Your Active Round</div></div></header>
+        <div class="recovery-content">
+          <h1 class="recovery-alert">We found a round in progress!</h1>
+          <div class="recovery-card">
+            <h2 id="recoveryCourse">COURSE NAME</h2>
+            <p id="recoveryRoundType" class="recovery-type"></p>
+            <p id="recoveryProgress" class="recovery-progress"></p>
+            <p id="recoveryCurrentHole" class="recovery-current"></p>
+            <button id="resumeActiveRoundBtn" class="recovery-action" type="button">RESUME ACTIVE ROUND »»</button>
+            <button id="newRoundRecoveryBtn" class="recovery-action recovery-new" type="button">START A NEW ROUND »»</button>
+          </div>
+        </div>
+      </section>
+      <!-- Recent performance views and independent Home destinations. -->
+      <section id="homeDestinationScreen" class="screen destination-screen" aria-label="Home card destination" hidden>
+        <header class="setup-header destination-photo-header">
+          <button id="destinationBackBtn" class="setup-back" type="button" aria-label="Back to Home">«</button>
+          <div class="setup-heading">
+            <div id="destinationHeaderKicker" class="setup-kicker">RECENT PERFORMANCE</div>
+            <div id="destinationHeaderName" class="setup-title">Isaiah Gonzales</div>
+          </div>
+        </header>
+        <div class="destination-content">
+          <div id="recentPerformanceViews" hidden>
+            <h1 class="performance-course">West Woods GC</h1>
+            <p class="performance-tees">Sleeping Indian/Cottonwood · Championship Tees</p>
+            <div class="performance-view-card">
+              <div class="performance-stepper">
+                <button id="performancePrev" type="button" aria-label="Previous performance view">««</button>
+                <div class="performance-view-label"><span id="performanceCounter">VIEW 1 OF 3</span><strong id="performanceViewTitle">Round Overview</strong></div>
+                <button id="performanceNext" type="button" aria-label="Next performance view">»»</button>
+              </div>
+              <div id="performanceMetrics" class="performance-metrics"></div>
+              <p id="performanceDescription" class="performance-description"></p>
+              <div id="performanceDots" class="performance-dots" aria-label="Performance view position"></div>
+            </div>
+            <p class="performance-demo-note">Layout preview only · Sample statistics, not live round data</p>
+          </div>
+          <div id="otherDestinationViews" hidden>
+            <h1 id="destinationTitle"></h1>
+            <p id="destinationIntro"></p>
+            <div class="destination-preview"><h2 id="destinationSectionTitle"></h2><p id="destinationDetail"></p></div>
+          </div>
         </div>
       </section>
       <!-- =====================================================
@@ -202,65 +256,6 @@
     </div>
   </header>
   <div class="setup-content">
-    <!-- ROUND TYPE -->
-    <section class="setup-section">
-      <label
-        class="setup-section-title"
-        for="roundTypeSelect"
-      >
-        ROUND TYPE
-      </label>
-      <div class="select-wrap">
-        <select
-          id="roundTypeSelect"
-          class="setup-select is-unselected"
-        >
-          <option value="" selected>
-            Select Round Type
-          </option>
-          <option value="practice">
-            Practice Round
-          </option>
-          <option value="jr-pga">
-            Jr PGA Tournament
-          </option>
-          <option value="ajga">
-            AJGA Tournament
-          </option>
-          <option value="high-school">
-            High School Tournament
-          </option>
-          <option value="other">
-            Other Event
-          </option>
-        </select>
-      </div>
-    </section>
-    <!-- ROUND LENGTH -->
-    <section class="setup-section">
-      <label
-        class="setup-section-title"
-        for="roundLengthSelect"
-      >
-        ROUND LENGTH
-      </label>
-      <div class="select-wrap">
-        <select
-          id="roundLengthSelect"
-          class="setup-select"
-        >
-          <option value="" selected>
-            Select number of Holes
-          </option>
-          <option value="9">
-            9 Holes
-          </option>
-          <option value="18">
-            18 Holes
-          </option>
-        </select>
-      </div>
-    </section>
     <!-- COURSE -->
     <section class="setup-section">
       <div class="setup-section-title">
@@ -351,6 +346,103 @@
         </select>
       </div>
     </section>
+
+    <!-- ROUND TYPE -->
+    <section class="setup-section">
+      <label
+        class="setup-section-title"
+        for="roundTypeSelect"
+      >
+        ROUND TYPE
+      </label>
+      <div class="select-wrap">
+        <select
+          id="roundTypeSelect"
+          class="setup-select is-unselected"
+        >
+          <option value="" selected>
+            Select Round Type
+          </option>
+          <option value="practice">
+            Practice Round
+          </option>
+          <option value="jr-pga">
+            Jr PGA Tournament
+          </option>
+          <option value="ajga">
+            AJGA Tournament
+          </option>
+          <option value="high-school">
+            High School Tournament
+          </option>
+          <option value="other">
+            Other Event
+          </option>
+        </select>
+      </div>
+    </section>
+    <!-- ROUND LENGTH -->
+    <section class="setup-section">
+      <label
+        class="setup-section-title"
+        for="roundLengthSelect"
+      >
+        ROUND LENGTH
+      </label>
+      <div class="select-wrap">
+        <select
+          id="roundLengthSelect"
+          class="setup-select"
+        >
+          <option value="" selected>
+            Select number of Holes
+          </option>
+          <option value="9">
+            9 Holes
+          </option>
+          <option value="18">
+            18 Holes
+          </option>
+        </select>
+      </div>
+    </section>
+<!-- STARTING HOLE -->
+    <section id="startingHoleSection" class="setup-section">
+      <label
+        class="setup-section-title"
+        for="startingHoleSelect"
+      >
+        STARTING HOLE
+      </label>
+      <div class="select-wrap">
+        <select
+          id="startingHoleSelect"
+          class="setup-select is-unselected"
+        >
+          <option value="" selected>Select Starting Hole</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+        </select>
+      </div>
+    </section>
+
+
     <!-- COURSE DETAILS -->
     <section class="setup-section">
       <div class="setup-section-title">
@@ -364,14 +456,14 @@
             </div>
             <div
               id="courseDataStatus"
-              class="course-data-status"
+              class="course-data-status is-attention"
             >
-              Not retrieved
+              Waiting for course data
             </div>
           </div>
           <span
             id="courseDataIndicator"
-            class="status-dot"
+            class="status-dot is-attention"
             aria-hidden="true"
           ></span>
         </div>
@@ -430,41 +522,9 @@
         autocomplete="off"
       >
     </section>
-    <!-- STARTING HOLE -->
-    <section id="startingHoleSection" class="setup-section">
-      <label
-        class="setup-section-title"
-        for="startingHoleSelect"
-      >
-        STARTING HOLE
-      </label>
-      <div class="select-wrap">
-        <select
-          id="startingHoleSelect"
-          class="setup-select is-unselected"
-        >
-          <option value="" selected>Select Starting Hole</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-          <option value="16">16</option>
-          <option value="17">17</option>
-          <option value="18">18</option>
-        </select>
-      </div>
-    </section>
+
+   
+
     <!-- START ROUND -->
     <section class="setup-start-area">
 <button
@@ -505,6 +565,15 @@
             <div class="setup-title">Course Data</div>
           </div>
         </header>
+        <button
+          id="courseDataFloatingBackBtn"
+          class="course-data-floating-back"
+          type="button"
+          hidden
+          aria-label="Back"
+        >
+          « BACK
+        </button>
         <div class="setup-content course-data-content">
           <section class="setup-section">
             <div class="setup-section-title">COURSE PROFILE</div>
@@ -543,6 +612,44 @@
           </p>
         </div>
       </section>
+      <!-- HOLE STATS / SCORECARD INTERACTION PROTOTYPE -->
+      <section id="holeStatsScreen" class="screen hole-screen" aria-label="Hole Stats" hidden>
+        <header class="hole-hero"><div class="hole-brand">Stracker</div><div class="hole-tagline">Golf Stats Tracking System</div></header>
+        <div class="hole-course-strip"><strong id="holeCourseName">ROUND IN PROGRESS</strong><span>Stage 1 · Hole navigation</span></div>
+        <div class="hole-current"><div><small>CURRENT HOLE</small><strong id="holeCurrentNumber">Hole 8</strong></div><div><small>YARDS</small><strong id="holeCurrentYards">412</strong></div><div><small>PAR</small><strong id="holeCurrentPar">4</strong></div></div>
+        <div class="hole-body">
+          <div class="hole-stats-label">HOLE STATS <button id="editHoleDataInlineBtn" class="hole-data-inline-edit" type="button">Edit Hole Data »»</button></div>
+          <div class="hole-stat-trio">
+            <div><b>FIR <button class="stat-help-trigger" type="button" data-stat-help="fir" aria-label="Help: FIR"><svg class="stracker-help-flag" viewBox="0 0 32 32" width="23" height="23" aria-hidden="true"><g transform="rotate(-23 16 16)"><path d="M8 28V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 5L27 8L23 13L27 19L9 17Z" fill="currentColor"/><text x="17" y="15.4" font-size="10.5" font-family="Arial,sans-serif" font-weight="900" text-anchor="middle" fill="#fff">?</text></g></svg></button></b><div class="hole-choice-row"><button type="button" class="hole-choice" aria-label="FIR Yes">Y</button><button type="button" class="hole-choice" aria-label="FIR No">N</button></div></div>
+            <div><b>GIR <button class="stat-help-trigger" type="button" data-stat-help="gir" aria-label="Help: GIR"><svg class="stracker-help-flag" viewBox="0 0 32 32" width="23" height="23" aria-hidden="true"><g transform="rotate(-23 16 16)"><path d="M8 28V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 5L27 8L23 13L27 19L9 17Z" fill="currentColor"/><text x="17" y="15.4" font-size="10.5" font-family="Arial,sans-serif" font-weight="900" text-anchor="middle" fill="#fff">?</text></g></svg></button></b><div class="hole-choice-row"><button type="button" class="hole-choice" aria-label="GIR Yes">Y</button><button type="button" class="hole-choice" aria-label="GIR No">N</button></div></div>
+            <div><b>UP &amp; DWN <button class="stat-help-trigger" type="button" data-stat-help="updown" aria-label="Help: UP and DOWN"><svg class="stracker-help-flag" viewBox="0 0 32 32" width="23" height="23" aria-hidden="true"><g transform="rotate(-23 16 16)"><path d="M8 28V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 5L27 8L23 13L27 19L9 17Z" fill="currentColor"/><text x="17" y="15.4" font-size="10.5" font-family="Arial,sans-serif" font-weight="900" text-anchor="middle" fill="#fff">?</text></g></svg></button></b><div class="hole-choice-row"><button type="button" class="hole-choice" aria-label="Up and down Yes">Y</button><button type="button" class="hole-choice" aria-label="Up and down No">N</button></div></div>
+          </div>
+          <div class="hole-stat-pair">
+            <div><b>PUTTS <button class="stat-help-trigger" type="button" data-stat-help="putts" aria-label="Help: PUTTS"><svg class="stracker-help-flag" viewBox="0 0 32 32" width="23" height="23" aria-hidden="true"><g transform="rotate(-23 16 16)"><path d="M8 28V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 5L27 8L23 13L27 19L9 17Z" fill="currentColor"/><text x="17" y="15.4" font-size="10.5" font-family="Arial,sans-serif" font-weight="900" text-anchor="middle" fill="#fff">?</text></g></svg></button></b><div class="hole-counter-row"><button type="button" class="hole-adjust" aria-label="Decrease putts">−</button><button type="button" class="hole-count" aria-label="Activate putts entry" aria-pressed="false">0</button><button type="button" class="hole-adjust" aria-label="Increase putts">+</button></div></div>
+            <div><b>PENALTY STROKES <button class="stat-help-trigger" type="button" data-stat-help="penalties" aria-label="Help: PENALTY STROKES"><svg class="stracker-help-flag" viewBox="0 0 32 32" width="23" height="23" aria-hidden="true"><g transform="rotate(-23 16 16)"><path d="M8 28V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 5L27 8L23 13L27 19L9 17Z" fill="currentColor"/><text x="17" y="15.4" font-size="10.5" font-family="Arial,sans-serif" font-weight="900" text-anchor="middle" fill="#fff">?</text></g></svg></button></b><div class="hole-counter-row"><button type="button" class="hole-adjust" aria-label="Decrease penalties">−</button><button type="button" class="hole-count" aria-label="Activate penalties entry" aria-pressed="false">0</button><button type="button" class="hole-adjust" aria-label="Increase penalties">+</button></div></div>
+          </div>
+          <div class="hole-score-sample"><b>SCORE <button class="stat-help-trigger" type="button" data-stat-help="score" aria-label="Help: SCORE"><svg class="stracker-help-flag" viewBox="0 0 32 32" width="23" height="23" aria-hidden="true"><g transform="rotate(-23 16 16)"><path d="M8 28V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 5L27 8L23 13L27 19L9 17Z" fill="currentColor"/><text x="17" y="15.4" font-size="10.5" font-family="Arial,sans-serif" font-weight="900" text-anchor="middle" fill="#fff">?</text></g></svg></button></b><div class="hole-counter-row"><button type="button" class="hole-adjust" aria-label="Decrease score">−</button><button type="button" class="hole-count" aria-label="Activate score entry" aria-pressed="false">0</button><button type="button" class="hole-adjust" aria-label="Increase score">+</button></div></div>
+          <div class="hole-navigation" aria-label="Navigate holes">
+            <button id="previousHoleBtn" type="button" aria-label="Previous hole">«</button>
+            <button id="nextHoleBtn" type="button" aria-label="Next hole">»</button>
+          </div>
+          <button type="button" class="hole-demo-save" disabled>SAVE HOLE</button>
+          <div class="hole-edit-links">
+            <div class="hole-setup-edit">Need to edit this round's setup? <button id="editActiveRoundSetupBtn" type="button">EDIT »</button></div>
+          </div>
+        </div>
+      </section>
+        <div id="statHelpOverlay" class="stat-help-overlay" hidden>
+          <div class="stat-help-dialog" role="dialog" aria-modal="true" aria-labelledby="statHelpTitle">
+            <button id="statHelpClose" type="button" class="stat-help-close" aria-label="Close help">×</button>
+            <h2 id="statHelpTitle"></h2><p id="statHelpText"></p>
+          </div>
+        </div>
+        <div id="scorebarShade" class="scorebar-shade" hidden></div>
+        <aside id="scorebarPanel" class="scorebar-panel" aria-label="In-progress scorecard" aria-hidden="true">
+          <button id="scorebarTab" class="scorebar-tab" type="button" aria-label="Open scorecard" aria-expanded="false"><span aria-hidden="true">❮</span></button>
+          <div class="scorebar-inner"><div class="scorebar-start" aria-label="Round starts at even par"><span>ROUND START</span><strong>E</strong></div><div id="scorebarRows" class="scorebar-rows"></div></div>
+        </aside>
       <!-- =====================================================
            BOTTOM NAV
            ===================================================== -->
