@@ -352,6 +352,7 @@ async function searchCourses(query) {
     lastCourseSearchQuery = query;
     lastCourseSearchResults = courses;
     renderCourseResults(courses);
+    revealCourseSearchResults();
   } catch (error) {
     console.error('OpenGolfAPI course search:', error);
     courseSearchStatus.textContent =
@@ -359,6 +360,33 @@ async function searchCourses(query) {
     courseSearchResults.innerHTML = '';
   }
 }
+// On iPhone the keyboard can cover search results. Keep the panel heading
+// directly below the sticky header so the first matches are visible.
+function revealCourseSearchResults() {
+  if (courseSearchPanel.hidden || roundSetupScreen.hidden || !courseSearchInput.matches(':focus')) return;
+  const align = () => {
+    if (courseSearchPanel.hidden || roundSetupScreen.hidden || !courseSearchInput.matches(':focus')) return;
+    const panelTop = courseSearchPanel.getBoundingClientRect().top;
+    const screenTop = roundSetupScreen.getBoundingClientRect().top;
+    const headerHeight = roundSetupScreen.querySelector('.setup-header')?.getBoundingClientRect().height || 88;
+    const target = roundSetupScreen.scrollTop + panelTop - screenTop - headerHeight - 4;
+    roundSetupScreen.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+  };
+  requestAnimationFrame(align);
+  // iOS keyboard animation can change the visual viewport after results render.
+  setTimeout(align, 250);
+}
+
+function revealSelectedCourse() {
+  if (roundSetupScreen.hidden) return;
+  const courseSection = courseSelectBtn.closest('.setup-section');
+  if (!courseSection) return;
+  const headerHeight = roundSetupScreen.querySelector('.setup-header')?.getBoundingClientRect().height || 88;
+  const target = roundSetupScreen.scrollTop + courseSection.getBoundingClientRect().top -
+    roundSetupScreen.getBoundingClientRect().top - headerHeight - 8;
+  roundSetupScreen.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+}
+
 function renderCourseResults(courses) {
   courseSearchResults.innerHTML = '';
   if (!courses.length) {
@@ -449,7 +477,10 @@ async function selectCourse(course) {
   courseDataIndicator.classList.add('is-attention');
   courseDataIndicator.classList.remove('is-complete');
   showToast('Course selected — now select tees');
+  // Confirm the chosen course visibly instead of jumping directly to Tees.
+  requestAnimationFrame(revealSelectedCourse);
   await loadCourseData(course.id);
+  requestAnimationFrame(revealSelectedCourse);
 }
 /* =========================================================
    LOAD TEES + HOLES

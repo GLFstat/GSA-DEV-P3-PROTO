@@ -2290,3 +2290,26 @@ html, body, .app, .screen, .setup-content, .destination-content, .hole-body { ba
   margin-left: -5px;
   transform: translateY(-45px);
 }
+
+/* =========================================================
+   PHONE REFINEMENTS — HOME, HEADER MENU, SCORE STRIP
+   ========================================================= */
+@media (max-width: 430px) {
+  /* Constrain the home grid to the viewport and use symmetric gutters. */
+  #homeScreen .content { width: 100%; min-width: 0; padding-left: 23px; padding-right: 23px; box-sizing: border-box; }
+  #homeScreen .content > *, #homeScreen .home-card-group, #homeScreen .info-card { min-width: 0; max-width: 100%; }
+  /* Reduce space between cards, without reducing the card content. */
+  #homeScreen .home-card-group { gap: 8px; }
+  #homeScreen .overall-group { margin-top: 13px; }
+  /* Global menu is positioned separately for the three header heights. */
+  .app:has(#roundSetupScreen:not([hidden])) .global-menu-button,
+  .app:has(#courseDataScreen:not([hidden])) .global-menu-button { top: 19px; }
+  .app:has(#holeStatsScreen:not([hidden])) .global-menu-button { top: 6px; }
+}
+/* Compact the score strip enough to show hole 18 above the fixed footer.
+   Preserve the current-hole photo and the full set of score indicators. */
+.scorebar-hole-photo { margin-bottom: 10px; }
+.scorebar-start { padding-bottom: 4px; gap: 2px; }
+.scorebar-start strong { min-height: 47px; }
+.scorebar-rows { gap: 2px; }
+.scorebar-total { margin-bottom: 5px; }
