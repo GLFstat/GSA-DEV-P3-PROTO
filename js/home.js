@@ -38,12 +38,15 @@ let editingActiveRoundSetup = false;
 let activeHoleNumber = null;
 let roundHoleOrder = [];
 let roundStartingHole = null;
+let turnShownThisRound = false;
 // Stage 2: temporary, in-memory drafts keyed by actual course hole number.
 const holeStatDrafts = new Map();
 const savedHoleStats = new Map();
 function updateHomeRoundButton() {
   const label = document.querySelector('.start-round > span:first-child');
   if (label) label.textContent = roundInProgress ? 'RESUME ROUND ' : 'START A NEW ROUND ';
+  const newButton = document.getElementById('homeNewRoundBtn');
+  if (newButton) newButton.hidden = !roundInProgress;
 }
 function showHome() {
   roundRecoveryScreen.hidden = true;
@@ -1307,6 +1310,7 @@ document
     if (!returningToRound || activeHoleNumber === null) {
       holeStatDrafts.clear();
       savedHoleStats.clear();
+      turnShownThisRound = false;
       initializeRoundHoleNavigation();
     }
     showHoleStatsDemo(returningToRound);
@@ -1479,7 +1483,7 @@ function renderHoleStatDraft() {
     if (count) {
       count.textContent = draft[key] === null ? '0' : String(draft[key]);
       count.setAttribute('aria-pressed', String(draft[key] !== null));
-      count.classList.toggle('is-confirmed', draft[key] !== null);
+      count.classList.toggle('is-confirmed', draft[key] !== null && draft[key] > 0);
     }
     const decrease = group.querySelector('.hole-adjust');
     if (decrease) decrease.disabled = draft[key] === null || draft[key] <= 0;
@@ -1594,6 +1598,30 @@ function getSavedRoundTotals() {
   return totals;
 }
 function renderSampleScorebar() {
+  const photoHole = document.getElementById('scorebarPhotoHole');
+  if (photoHole) photoHole.textContent = `HOLE ${activeHoleNumber ?? roundStartingHole ?? 1}`;
+  // Derive the running score only from saved holes with known pars.
+  // This works for shotgun starts and for edits to previously saved holes.
+  const totals = getSavedRoundTotals();
+  // Report the last hole completed consecutively in playing order.
+  // The order supports shotgun starts and avoids claiming progress past gaps.
+  let throughHole = null;
+  for (const hole of roundHoleOrder) {
+    if (!savedHoleStats.has(hole)) break;
+    throughHole = hole;
+  }
+  const throughLabel = document.getElementById('scorebarThrough');
+  if (throughLabel) throughLabel.textContent = throughHole === null
+    ? '(NOT STARTED)' : `(THRU ${throughHole})`;
+  const runningScore = document.getElementById('scorebarRunningTotal');
+  if (runningScore) {
+    runningScore.firstChild.textContent = totals.parHoles ? formatToPar(totals.toPar) : 'E';
+    runningScore.classList.toggle('under', totals.parHoles > 0 && totals.toPar < 0);
+    runningScore.classList.toggle('over', totals.parHoles > 0 && totals.toPar > 0);
+    runningScore.classList.toggle('even', !totals.parHoles || totals.toPar === 0);
+    runningScore.setAttribute('aria-label',
+      `${totals.parHoles} scored holes with known par; ${formatToPar(totals.toPar)} relative to par`);
+  }
   const rows = document.getElementById('scorebarRows');
   rows.replaceChildren();
   for (const hole of roundHoleOrder) {
@@ -1637,6 +1665,7 @@ document.querySelector('.hole-demo-save').addEventListener('click', () => {
   }
   renderSampleScorebar();
   persistActiveRound();
+  maybeShowAtTurn();
 });
 
 function setScorebarOpen(open) {
@@ -1647,6 +1676,10 @@ function setScorebarOpen(open) {
   scorebarPanel.setAttribute('aria-hidden', String(!open));
   scorebarTab.setAttribute('aria-expanded', String(open));
   scorebarTab.setAttribute('aria-label', open ? 'Close scorecard' : 'Open scorecard');
+  // The score strip is the active layer while expanded: the navigation menu
+  // must not overlap it or capture taps until the strip is dismissed.
+  if (open) closeGlobalMenu();
+  syncGlobalMenuVisibility();
 }
 // Wrap course names at natural phrase boundaries without leaving a lone final word.
 function renderCourseNameHeading(courseName) {
@@ -1855,6 +1888,10 @@ recoveryNewBtn.addEventListener('click', () => {
     recoveryNewBtn.replaceChildren(document.createTextNode('ARE YOU SURE?'), document.createElement('br'), document.createTextNode('START NEW ROUND »»'));
     return;
   }
+  clearActiveRoundAndStartSetup();
+});
+
+function clearActiveRoundAndStartSetup() {
   // Confirmed: clear local round and all active-round state before setup.
   try { localStorage.removeItem(LOCAL_ROUND_KEY); }
   catch (error) { console.error('Unable to clear saved round:', error); showToast('Unable to clear saved round'); return; }
@@ -1883,12 +1920,91 @@ recoveryNewBtn.addEventListener('click', () => {
   resetCourseDetails();
   resetRecoveryNewButton();
   showRoundSetup();
-});
+}
 
 /* =========================================================
    STAGE 3A — DEVICE-LOCAL ACTIVE ROUND RECOVERY
    Stored synchronously after each scoring interaction. No network calls.
    ========================================================= */
+/* =========================================================
+   AT THE TURN — nine sequentially completed holes, one time
+   ========================================================= */
+const TURN_SETTING_KEY = 'stracker:p3:at-turn-enabled:v1';
+const atTurnOverlay = document.getElementById('atTurnOverlay');
+const turnSettingsOverlay = document.getElementById('turnSettingsOverlay');
+const turnEnabledInput = document.getElementById('turnEnabled');
+let turnEnabled = true;
+try { turnEnabled = localStorage.getItem(TURN_SETTING_KEY) !== 'false'; } catch (_) {}
+turnEnabledInput.checked = turnEnabled;
+turnEnabledInput.addEventListener('change', () => {
+  turnEnabled = turnEnabledInput.checked;
+  try { localStorage.setItem(TURN_SETTING_KEY, String(turnEnabled)); } catch (_) {}
+});
+document.getElementById('turnSettingsOpen').addEventListener('click', () => { turnSettingsOverlay.hidden = false; });
+document.getElementById('turnSettingsClose').addEventListener('click', () => { turnSettingsOverlay.hidden = true; });
+function maybeShowAtTurn() {
+  if (turnShownThisRound || !turnEnabled || Number(roundLengthSelect.value) !== 18 || roundHoleOrder.length !== 18) return;
+  const firstNine = roundHoleOrder.slice(0, 9);
+  if (!firstNine.every(hole => savedHoleStats.has(hole))) return;
+  // Do not show retroactively after a later hole has already been completed.
+  if (roundHoleOrder.slice(9).some(hole => savedHoleStats.has(hole))) return;
+  turnShownThisRound = true;
+  const entries = firstNine.map(hole => ({hole, stats:savedHoleStats.get(hole), par:holeParForNumber(hole)}));
+  const score = entries.reduce((sum, item) => sum + item.stats.score, 0);
+  const parKnown = entries.every(item => item.par !== null);
+  const toPar = parKnown ? entries.reduce((sum, item) => sum + item.stats.score - item.par, 0) : null;
+  document.getElementById('turnScore').textContent = toPar === null ? String(score) + ' STROKES' : formatToPar(toPar);
+  const gir = entries.filter(item => item.stats.gir === 'Y').length;
+  const puttEntries = entries.filter(item => Number.isInteger(item.stats.putts));
+  const avgPutts = puttEntries.length === 9 ? (puttEntries.reduce((sum, item) => sum + item.stats.putts, 0) / 9) : null;
+  const penalties = entries.filter(item => Number.isInteger(item.stats.penalties)).reduce((sum, item) => sum + item.stats.penalties, 0);
+  const headline = document.getElementById('turnHeadline');
+  const observation = document.getElementById('turnObservation');
+  const encouragement = document.getElementById('turnEncouragement');
+  if (toPar !== null && toPar <= 1) {
+    headline.textContent = toPar < 0 ? 'Outstanding first nine!' : "That's a strong start!";
+    encouragement.textContent = 'Keep the confidence. Play your game!';
+  } else if (toPar !== null && toPar >= 7) {
+    headline.textContent = 'Fresh nine. Fresh start.';
+    encouragement.textContent = 'One hole at a time. You’ve got this!';
+  } else {
+    headline.textContent = 'Nine down. Keep it going!';
+    encouragement.textContent = 'A new nine, a new opportunity!';
+  }
+  if (avgPutts !== null && avgPutts <= 1.7) {
+    observation.textContent = `Your putting is a bright spot: ${avgPutts.toFixed(1)} putts per hole so far.`;
+  } else if (gir >= 5) {
+    observation.textContent = `You found ${gir} greens in regulation on the first nine. Nice ball-striking!`;
+  } else if (penalties >= 2) {
+    observation.textContent = 'A few cleaner holes could make a difference on the next nine.';
+  } else if (avgPutts !== null && avgPutts >= 2.3) {
+    observation.textContent = 'There may be opportunities to pick up strokes with steady putting on the back nine.';
+  } else {
+    observation.textContent = `You've completed the first nine in ${score} strokes. Stay focused on the next shot.`;
+  }
+  // Full-course rating is contextual only; never imply it is a nine-hole rating.
+  const context = document.getElementById('turnCourseContext');
+  const tee = typeof getSelectedTee === 'function' ? getSelectedTee() : null;
+  const rating = tee ? Number(tee.rating ?? tee.course_rating ?? tee.courseRating) : NaN;
+  const strong = toPar !== null && toPar <= 1;
+  context.hidden = !(strong && Number.isFinite(rating) && rating >= 70);
+  context.textContent = context.hidden ? '' : `Especially on a course with an 18-hole rating of ${rating.toFixed(1)}!`;
+  persistActiveRound();
+  setScorebarOpen(false);
+  bottomNav.hidden = false;
+  bottomNav.inert = true;
+  atTurnOverlay.hidden = false;
+  atTurnOverlay.classList.remove('turn-visible');
+  requestAnimationFrame(() => requestAnimationFrame(() => atTurnOverlay.classList.add('turn-visible')));
+}
+document.getElementById('turnContinue').addEventListener('click', () => {
+  atTurnOverlay.classList.remove('turn-visible');
+  atTurnOverlay.hidden = true;
+  bottomNav.inert = false;
+  bottomNav.hidden = true;
+  persistActiveRound();
+});
+
 const LOCAL_ROUND_KEY = 'stracker:p3:active-round:v1';
 let restoringLocalRound = false;
 function persistActiveRound() {
@@ -1901,6 +2017,7 @@ function persistActiveRound() {
         length: roundLengthSelect.value, start: startingHoleSelect.value },
       order: roundHoleOrder, startingHole: roundStartingHole,
       currentHole: activeHoleNumber, returnHole: returnHoleAfterEdit,
+      turnShown: turnShownThisRound,
       drafts: [...holeStatDrafts.entries()], saved: [...savedHoleStats.entries()],
       confirmedRows: [...courseDataConfirmedRows],
       view: !holeStatsScreen.hidden ? 'holeStats' : !courseDataScreen.hidden ? 'courseData' :
@@ -1957,6 +2074,7 @@ function recoverActiveRound() {
     roundStartingHole = snapshot.startingHole;
     activeHoleNumber = roundHoleOrder.includes(snapshot.currentHole) ? snapshot.currentHole : roundHoleOrder[0];
     returnHoleAfterEdit = snapshot.returnHole ?? null;
+    turnShownThisRound = Boolean(snapshot.turnShown);
     roundInProgress = true;
     editingActiveRoundSetup = false;
     updateHomeRoundButton();
@@ -1980,3 +2098,61 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') persistActiveRound();
 });
 recoverActiveRound();
+
+/* GLOBAL NAVIGATION — added without changing scoring or recovery internals. */
+const globalMenuBtn = document.getElementById('globalMenuBtn');
+const globalMenuPanel = document.getElementById('globalMenuPanel');
+const newRoundConfirm = document.getElementById('newRoundConfirm');
+function closeGlobalMenu() { globalMenuPanel.hidden = true; globalMenuBtn.setAttribute('aria-expanded','false'); }
+globalMenuBtn.addEventListener('click', () => {
+  globalMenuPanel.hidden = !globalMenuPanel.hidden;
+  globalMenuBtn.setAttribute('aria-expanded', String(!globalMenuPanel.hidden));
+  document.querySelectorAll('[data-global-dest="hole"],[data-global-dest="course"]').forEach(b => b.disabled = !roundInProgress);
+});
+document.getElementById('globalMenuClose').addEventListener('click', closeGlobalMenu);
+// Dismiss the navigation card when tapping anywhere outside it.
+document.addEventListener('pointerdown', (event) => {
+  if (globalMenuPanel.hidden) return;
+  if (globalMenuPanel.contains(event.target) || globalMenuBtn.contains(event.target)) return;
+  closeGlobalMenu();
+});
+function openNewRoundConfirmation() {
+  closeGlobalMenu();
+  if (!roundInProgress) { showRoundSetup(); return; }
+  document.getElementById('newRoundConfirmMessage').textContent =
+    `You have ${savedHoleStats.size} saved hole${savedHoleStats.size === 1 ? '' : 's'} in your active round. Starting a new round will replace it and its saved statistics. This cannot be undone.`;
+  newRoundConfirm.hidden = false;
+}
+document.getElementById('homeNewRoundBtn').addEventListener('click', openNewRoundConfirmation);
+document.getElementById('keepCurrentRoundBtn').addEventListener('click', () => { newRoundConfirm.hidden = true; });
+document.getElementById('confirmNewRoundBtn').addEventListener('click', () => {
+  newRoundConfirm.hidden = true;
+  clearActiveRoundAndStartSetup();
+  updateHomeRoundButton();
+});
+globalMenuPanel.querySelectorAll('[data-global-dest]').forEach(button => button.addEventListener('click', () => {
+  const dest = button.dataset.globalDest;
+  closeGlobalMenu();
+  if (dest === 'new') { openNewRoundConfirmation(); return; }
+  if (dest === 'home') { showHome(); return; }
+  if (dest === 'hole') { if (roundInProgress) showHoleStatsDemo(true); return; }
+  if (dest === 'setup') {
+    if (roundInProgress) editingActiveRoundSetup = true;
+    showRoundSetup(); return;
+  }
+  if (dest === 'course') { if (roundInProgress) openCourseData('holeStats',activeHoleNumber); return; }
+  if (homeDestinations[dest]) showHomeDestination(dest);
+}));
+// Hide the global control during the modal recovery choice or AT THE TURN.
+function syncGlobalMenuVisibility() {
+  const hidden = scorebarPanel.classList.contains('is-open') ||
+    !roundRecoveryScreen.hidden || !atTurnOverlay.hidden ||
+    !turnSettingsOverlay.hidden || !newRoundConfirm.hidden;
+  globalMenuBtn.hidden = hidden;
+  if (hidden) closeGlobalMenu();
+}
+new MutationObserver(syncGlobalMenuVisibility).observe(roundRecoveryScreen,{attributes:true,attributeFilter:['hidden']});
+new MutationObserver(syncGlobalMenuVisibility).observe(atTurnOverlay,{attributes:true,attributeFilter:['hidden']});
+new MutationObserver(syncGlobalMenuVisibility).observe(turnSettingsOverlay,{attributes:true,attributeFilter:['hidden']});
+new MutationObserver(syncGlobalMenuVisibility).observe(newRoundConfirm,{attributes:true,attributeFilter:['hidden']});
+syncGlobalMenuVisibility();

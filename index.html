@@ -52,6 +52,7 @@
           </time>
         </section>
         <div class="content">
+          <button id="turnSettingsOpen" class="turn-settings-link" type="button">ON-COURSE SETTINGS ⚙</button>
           <button
             class="start-round"
             data-action="start-round"
@@ -60,6 +61,7 @@
             <span>START A NEW ROUND </span>
             <span class="double-chevron">»</span>
           </button>
+          <button id="homeNewRoundBtn" class="home-new-round" type="button" hidden>START A NEW ROUND »»</button>
           <div class="home-card-group recent-group">
             <div class="recent-round-heading" role="heading" aria-level="2"><span>RECENT ROUND<br>PERFORMANCE SUMMARY</span></div>
           <!-- LAST ROUND -->
@@ -614,7 +616,13 @@
       </section>
       <!-- HOLE STATS / SCORECARD INTERACTION PROTOTYPE -->
       <section id="holeStatsScreen" class="screen hole-screen" aria-label="Hole Stats" hidden>
-        <header class="hole-hero"><div class="hole-brand">Stracker</div><div class="hole-tagline">Golf Stats Tracking System</div></header>
+       
+        <header class="hole-hero">
+            <img src="images/-1-Logo+tag.png"
+            class="hole-logo"
+            alt="Stracker - Golf Stats Tracking System">
+        </header>
+
         <div class="hole-course-strip"><strong id="holeCourseName">ROUND IN PROGRESS</strong><span>Stage 1 · Hole navigation</span></div>
         <div class="hole-current"><div><small>CURRENT HOLE</small><strong id="holeCurrentNumber">Hole 8</strong></div><div><small>YARDS</small><strong id="holeCurrentYards">412</strong></div><div><small>PAR</small><strong id="holeCurrentPar">4</strong></div></div>
         <div class="hole-body">
@@ -648,8 +656,58 @@
         <div id="scorebarShade" class="scorebar-shade" hidden></div>
         <aside id="scorebarPanel" class="scorebar-panel" aria-label="In-progress scorecard" aria-hidden="true">
           <button id="scorebarTab" class="scorebar-tab" type="button" aria-label="Open scorecard" aria-expanded="false"><span aria-hidden="true">❮</span></button>
-          <div class="scorebar-inner"><div class="scorebar-start" aria-label="Round starts at even par"><span>ROUND START</span><strong>E</strong></div><div id="scorebarRows" class="scorebar-rows"></div></div>
+          <div class="scorebar-inner"><div class="scorebar-hole-photo" aria-label="Current hole"><strong id="scorebarPhotoHole">HOLE 1</strong></div><div class="scorebar-start" aria-label="Round total"><span>ROUND TOTAL</span><strong id="scorebarRunningTotal">E<small id="scorebarThrough">(NOT STARTED)</small></strong></div><div id="scorebarRows" class="scorebar-rows"></div></div>
         </aside>
+
+      <!-- AT THE TURN: transient overlay, footer remains outside the overlay -->
+      <section id="atTurnOverlay" class="at-turn-overlay" aria-label="At the Turn" role="dialog" aria-modal="true" aria-labelledby="atTurnTitle" hidden>
+        <div class="turn-inner">
+          <div class="turn-enter turn-enter-one">
+            <div class="turn-kicker">STRACKER • GOLF STATS TRACKING SYSTEM</div>
+            <h1 id="atTurnTitle">AT THE TURN</h1>
+            <p class="turn-subtitle">Nine down. Nine to go.</p>
+          </div>
+          <div class="turn-card turn-enter turn-enter-two">
+            <div class="turn-eyebrow">YOUR FIRST NINE</div>
+            <div id="turnScore" class="turn-score">—</div>
+            <h2 id="turnHeadline">Nine holes complete!</h2>
+            <p id="turnObservation"></p>
+            <p id="turnCourseContext" class="turn-course-context" hidden></p>
+          </div>
+          <div class="turn-enter turn-enter-three turn-bottom">
+            <p id="turnEncouragement">A fresh nine awaits. Play your game!</p>
+            <button id="turnContinue" class="turn-continue" type="button">LET'S PLAY NINE MORE »»</button>
+          </div>
+        </div>
+      </section>
+      <section id="turnSettingsOverlay" class="turn-settings-overlay" role="dialog" aria-modal="true" aria-label="On-course settings" hidden>
+        <div class="turn-settings-card">
+          <h2>ON-COURSE SETTINGS</h2>
+          <label class="turn-settings-row" for="turnEnabled"><span><strong>At the Turn</strong><small>Show encouragement after nine holes of an 18-hole round.</small></span><input id="turnEnabled" type="checkbox" checked></label>
+          <button id="turnSettingsClose" type="button">DONE »»</button>
+        </div>
+      </section>
+      <!-- SAFE GLOBAL NAVIGATION: never clears active-round data -->
+      <button id="globalMenuBtn" class="global-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="globalMenuPanel"><span class="menu-lines" aria-hidden="true"><span></span><span></span><span></span></span></button>
+      <div id="globalMenuPanel" class="global-menu-panel" hidden>
+        <div class="global-menu-head"><strong>GO TO</strong><button id="globalMenuClose" type="button" aria-label="Close menu">×</button></div>
+        <button type="button" data-global-dest="home">HOME</button>
+        <button type="button" data-global-dest="hole">HOLE STATS — CURRENT HOLE</button>
+        <button type="button" data-global-dest="setup">ROUND SETUP</button>
+        <button type="button" data-global-dest="course">COURSE DATA</button>
+        <button type="button" data-global-dest="clubhouse">CLUBHOUSE</button>
+        <button type="button" data-global-dest="my-game">MY GAME</button>
+        <button type="button" data-global-dest="history">HISTORY</button>
+        <button type="button" data-global-dest="new" class="global-menu-new">START A NEW ROUND</button>
+      </div>
+      <div id="newRoundConfirm" class="new-round-confirm" role="dialog" aria-modal="true" aria-labelledby="newRoundConfirmTitle" hidden>
+        <div class="new-round-confirm-card">
+          <h2 id="newRoundConfirmTitle">START A NEW ROUND?</h2>
+          <p id="newRoundConfirmMessage">Your current round will be replaced. Saved statistics from this active round will no longer be available through round recovery.</p>
+          <button id="keepCurrentRoundBtn" type="button">KEEP CURRENT ROUND</button>
+          <button id="confirmNewRoundBtn" type="button">YES, START A NEW ROUND</button>
+        </div>
+      </div>
       <!-- =====================================================
            BOTTOM NAV
            ===================================================== -->
