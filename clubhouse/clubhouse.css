@@ -1,0 +1,189 @@
+/* CLUBHOUSE — Stage 1 read-only round review */
+.clubhouse-preview {
+   padding-bottom: 28px;
+}
+.clubhouse-photo {
+   width: 100%;
+   height: 148px;
+   margin-bottom: 18px;
+   border-radius: 10px;
+   background: #4b493b url("../images/Clubhouse-trophys.png") center 53% / cover no-repeat;
+}
+.clubhouse-preview h1 {
+   font: 900 25px Arial, sans-serif;
+   margin: 0 0 8px;
+   color: var(--green);
+}
+.clubhouse-lead {
+   font-size: 18px;
+   line-height: 1.4;
+   margin: 0 0 18px;
+}
+.clubhouse-round-card {
+   background: #fff;
+   border: 1px solid var(--line);
+   border-radius: 10px;
+   padding: 17px 14px;
+}
+.clubhouse-round-card h2 {
+   margin: 0 0 6px;
+   font: 800 20px Arial, sans-serif;
+}
+.clubhouse-round-card > p {
+   margin: 5px 0 12px;
+}
+.clubhouse-metrics {
+   display: grid;
+   grid-template-columns: repeat(3, minmax(0,1fr));
+   gap: 5px;
+   text-align: center;
+}
+.clubhouse-metrics > div {
+   border-left: 1px solid #ddd;
+}
+.clubhouse-metrics > div:first-child {
+   border-left: 0;
+}
+.clubhouse-metrics strong {
+   display: block;
+   font-size: 28px;
+   color: #222;
+}
+.clubhouse-metrics span {
+   display: block;
+   font-size: 11px;
+   font-weight: 800;
+}
+.clubhouse-note, .clubhouse-next-note {
+   font-size: 13px;
+   line-height: 1.4;
+   color: #666;
+}
+.clubhouse-check-heading {
+   margin: 22px 0 10px;
+   font: 800 18px Arial, sans-serif;
+}
+.clubhouse-review-item {
+   background: #fff;
+   border-left: 4px solid var(--green);
+   padding: 11px 12px;
+   margin: 0 0 8px;
+   font-size: 15px;
+}
+.clubhouse-return {
+   width: 100%;
+   margin-top: 12px;
+   border: 0;
+   border-radius: 10px;
+   background: var(--green);
+   color: #fff;
+   padding: 15px;
+   font-size: 18px;
+   font-weight: 800;
+   cursor: pointer;
+}
+.clubhouse-return[hidden] {
+   display: none;
+}
+
+/* CLUBHOUSE HEADER — shared PWA screen, Clubhouse-only presentation */
+#homeDestinationScreen .destination-photo-header.is-clubhouse-header {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  height: 250px;
+  min-height: 250px;
+  padding: 0;
+  display: block;
+  background-image: linear-gradient(180deg, rgba(0,0,0,.43), rgba(0,0,0,.03) 60%, rgba(0,0,0,.4)), url("../images/Clubhouse-trophys.png");
+  background-size: cover;
+  background-position: center 48%;
+  background-repeat: no-repeat;
+  border-bottom: 3px solid #fff;
+}
+#homeDestinationScreen .is-clubhouse-header .setup-heading {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  right: 12px;
+  padding: 0;
+}
+#homeDestinationScreen .clubhouse-header-brand { display: none; }
+#homeDestinationScreen .is-clubhouse-header .clubhouse-header-brand { display: block; }
+#homeDestinationScreen .clubhouse-header-brand img {
+  display: block;
+  width: min(429px, 100%);
+  max-height: 150px;
+  object-fit: contain;
+  object-position: left top;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.8));
+  transform: translateY(-30px);
+}
+#homeDestinationScreen .is-clubhouse-header .setup-kicker,
+#homeDestinationScreen .is-clubhouse-header .setup-title { display: none; }
+#homeDestinationScreen .is-clubhouse-header .setup-back {
+  position: absolute;
+  left: 20px;
+  bottom: 16px;
+  top: auto;
+  z-index: 2;
+  background: rgba(255,255,255,.20);
+}
+.app:has(#homeDestinationScreen:not([hidden]) .is-clubhouse-header) > .global-menu-button {
+  top: 184px;
+  background: rgba(255,255,255,.20);
+}
+#homeDestinationScreen .destination-photo-header.is-clubhouse-header + .destination-content {
+  padding-top: 24px;
+}
+#homeDestinationScreen .clubhouse-main-heading {
+  color: var(--green);
+  font: 900 28px/1.1 Arial,sans-serif;
+  margin: 0 0 4px;
+}
+
+/* ACCELERATING RIGHT-TO-LEFT CHARACTER ARRIVAL — letters slide from right.
+   Start delay and total cascade remain in clubhouse.js. */
+#homeDestinationScreen .clubhouse-lead {
+  font-weight: 800;
+  animation: none;
+}
+#homeDestinationScreen .clubhouse-lead .clubhouse-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(75px, 0, 0);
+  animation: clubhouse-letter-arrive 620ms cubic-bezier(.18,.75,.25,1) both;
+  animation-delay: var(--clubhouse-letter-delay, 0ms);
+}
+#homeDestinationScreen .clubhouse-lead .clubhouse-space {
+  white-space: pre;
+}
+@keyframes clubhouse-letter-arrive {
+  from { opacity: 0; transform: translate3d(75px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #homeDestinationScreen .clubhouse-lead .clubhouse-letter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Clubhouse: the photo stops with its tagline visible, and both controls remain reachable. */
+#homeDestinationScreen .destination-photo-header.is-clubhouse-header {
+  position: sticky;
+  top: -185px;
+  z-index: 35;
+}
+#homeDestinationScreen .is-clubhouse-header .setup-back { z-index: 40; }
+.app:has(#homeDestinationScreen:not([hidden]) .is-clubhouse-header) > .global-menu-button {
+  top: clamp(8px, calc(184px - var(--clubhouse-scroll, 0px)), 184px);
+  z-index: 1100;
+}
+/* Stroke counts and metric labels remain neutral; only TO PAR value is colored. */
+#homeDestinationScreen .clubhouse-metrics strong { color: #303030; }
+#homeDestinationScreen .clubhouse-metrics span { color: #303030; }
+#homeDestinationScreen .clubhouse-metrics .clubhouse-par-over strong { color: #303030; }
+#homeDestinationScreen .clubhouse-metrics .clubhouse-par-even strong { color: #1b912e; }
+#homeDestinationScreen .clubhouse-metrics .clubhouse-par-under strong { color: #e22323; }

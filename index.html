@@ -14,6 +14,7 @@
   >
   <title>MyGolfStats – P3 Prototype</title>
   <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="clubhouse/clubhouse.css">
 </head>
 <body>
   <main class="phone-shell">
@@ -61,6 +62,7 @@
             <span>START A NEW ROUND </span>
             <span class="double-chevron">»</span>
           </button>
+          <button id="homeCompletedClubhouseBtn" class="completed-clubhouse-action" type="button" hidden>GO TO CLUBHOUSE »»</button>
           <button id="homeNewRoundBtn" class="home-new-round" type="button" hidden>START A NEW ROUND »»</button>
           <div class="home-card-group recent-group">
             <div class="recent-round-heading" role="heading" aria-level="2"><span>RECENT ROUND<br>PERFORMANCE SUMMARY</span></div>
@@ -199,9 +201,10 @@
       </section>
       <!-- Recent performance views and independent Home destinations. -->
       <section id="homeDestinationScreen" class="screen destination-screen" aria-label="Home card destination" hidden>
-        <header class="setup-header destination-photo-header">
+        <header class="setup-header destination-photo-header" id="destinationPhotoHeader">
           <button id="destinationBackBtn" class="setup-back" type="button" aria-label="Back to Home">«</button>
           <div class="setup-heading">
+            <div class="clubhouse-header-brand" aria-label="Circle minus one logo"><img src="images/-1-Logo+tag.png" alt="-1 — Your Link to Next Level Golf"></div>
             <div id="destinationHeaderKicker" class="setup-kicker">RECENT PERFORMANCE</div>
             <div id="destinationHeaderName" class="setup-title">Isaiah Gonzales</div>
           </div>
@@ -221,6 +224,25 @@
               <div id="performanceDots" class="performance-dots" aria-label="Performance view position"></div>
             </div>
             <p class="performance-demo-note">Layout preview only · Sample statistics, not live round data</p>
+          </div>
+          <div id="clubhousePreview" class="clubhouse-preview" hidden>
+            <h1 class="clubhouse-main-heading">CLUBHOUSE</h1>
+            <p class="clubhouse-lead">Let's review, before this one's in the books.</p>
+            <div class="clubhouse-round-card">
+              <h2 id="clubhouseCourseName">No active round</h2>
+              <p id="clubhouseRoundInfo"></p>
+              <div class="clubhouse-metrics">
+                <div><strong id="clubhouseHolesSaved">0</strong><span>HOLES SAVED</span></div>
+                <div><strong id="clubhouseScoreTotal">—</strong><span>STROKES</span></div>
+                <div><strong id="clubhouseToPar">—</strong><span>VS PAR*</span></div>
+              </div>
+              <p class="clubhouse-note">*Versus par includes only saved holes with known par.</p>
+            </div>
+            <h2 class="clubhouse-check-heading">ROUND CHECK</h2>
+            <div id="clubhouseReviewItems" class="clubhouse-review-items"></div>
+            <p class="clubhouse-note">You can return to the round to make corrections. Nothing is finalized on this screen.</p>
+            <button id="clubhouseReturnRound" class="clubhouse-return" type="button">RETURN TO ROUND »»</button>
+            <p class="clubhouse-next-note">Preview stage: official round completion and archiving are not connected yet.</p>
           </div>
           <div id="otherDestinationViews" hidden>
             <h1 id="destinationTitle"></h1>
@@ -616,6 +638,7 @@
       </section>
       <!-- HOLE STATS / SCORECARD INTERACTION PROTOTYPE -->
       <section id="holeStatsScreen" class="screen hole-screen" aria-label="Hole Stats" hidden>
+        
        
         <header class="hole-hero">
             <img src="images/-1-Logo+tag.png"
@@ -623,7 +646,7 @@
             alt="Stracker - Golf Stats Tracking System">
         </header>
 
-        <div class="hole-course-strip"> <strong id="holeCourseName">ROUND IN PROGRESS</strong><span>Stage 1 · Hole navigation</span></div>
+        <div id="holeCourseStrip" class="hole-course-strip"> <strong id="holeCourseName">ROUND IN PROGRESS</strong><span id="holeCourseSubline">Stage 1 · Hole navigation</span><button id="completedRoundClubhouseBtn" class="hole-clubhouse-link" type="button" hidden>ROUND COMPLETE — GO TO CLUBHOUSE »»</button></div>
         <div class="hole-current"><div><small>CURRENT HOLE</small><strong id="holeCurrentNumber">Hole 8</strong></div><div><small>YARDS</small><strong id="holeCurrentYards">412</strong></div><div><small>PAR</small><strong id="holeCurrentPar">4</strong></div></div>
         <div class="hole-body">
           <div class="hole-stats-label">HOLE STATS<button id="editHoleDataInlineBtn" class="hole-data-inline-edit" type="button">Edit Hole Data »»</button></div>
@@ -677,6 +700,27 @@
           <div class="turn-enter turn-enter-three turn-bottom">
             <p id="turnEncouragement">A fresh nine awaits. Play your game!</p>
             <button id="turnContinue" class="turn-continue" type="button">LET'S PLAY NINE MORE »»</button>
+          </div>
+        </div>
+      </section>
+      <!-- ROUND COMPLETE: saved scoring remains recoverable while Clubhouse is optional. -->
+      <section id="roundCompleteOverlay" class="at-turn-overlay round-complete-overlay" aria-label="Round Complete" role="dialog" aria-modal="true" aria-labelledby="roundCompleteTitle" hidden>
+        <div class="turn-inner">
+          <div class="turn-enter turn-enter-one">
+            <div class="turn-kicker">STRACKER • GOLF STATS TRACKING SYSTEM</div>
+            <h1 id="roundCompleteTitle">ROUND COMPLETE!</h1>
+            <p class="turn-subtitle">Great job finishing your round.</p>
+          </div>
+          <div class="turn-card turn-enter turn-enter-two">
+            <div class="turn-eyebrow">YOUR ROUND</div>
+            <div id="roundCompleteScore" class="turn-score">—</div>
+            <h2>Got a couple of minutes?</h2>
+            <p>Head into Clubhouse to review your round and add a few details while they're fresh.</p>
+          </div>
+          <div class="turn-enter turn-enter-three turn-bottom">
+            <p>Your scores are saved. You can visit Clubhouse later.</p>
+            <button id="roundCompleteClubhouse" class="turn-continue" type="button">GO TO CLUBHOUSE »»</button>
+            <button id="roundCompleteLater" class="round-complete-later" type="button">I'LL DO THIS LATER »»</button>
           </div>
         </div>
       </section>
@@ -757,6 +801,7 @@
     role="status"
     aria-live="polite"
   ></div>
+  <script src="clubhouse/clubhouse.js"></script>
   <script src="js/home.js"></script>
 </body>
 </html>

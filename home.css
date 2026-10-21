@@ -264,7 +264,10 @@ button {
   border-right: 1.5px solid #1b912e;
   border-top-right-radius: 15px;
 }
-.recent-round-heading span { position: relative; z-index: 1; }
+.recent-round-heading span {
+   position: relative;
+   z-index: 1;
+}
 
 /* LAST ROUND */
 .last-round {
@@ -1922,17 +1925,41 @@ button {
 }
 
 /* Course selection remains visually required until a course is chosen. */
-#courseSearchInput { border: 2px solid var(--red); }
-#courseSearchInput:focus { outline: 2px solid rgba(198,40,40,.20); outline-offset: 1px; }
-#courseSearchPanel.has-selected-course #courseSearchInput { border-color: var(--green); }
+#courseSearchInput {
+   border: 2px solid var(--red);
+}
+#courseSearchInput:focus {
+   outline: 2px solid rgba(198,40,40,.20);
+   outline-offset: 1px;
+}
+#courseSearchPanel.has-selected-course #courseSearchInput {
+   border-color: var(--green);
+}
 
 /* Compact edit links directly beneath SAVE HOLE. */
-.hole-edit-links { margin-top: -5px; }
-.hole-setup-edit { margin-top: 0; text-align: center; font-size: 14px; color: #666; }
-.hole-setup-edit button { border: 0; background: transparent; color: var(--green-dark); text-decoration: underline; font-weight: 800; padding: 5px 2px; cursor: pointer; }
+.hole-edit-links {
+   margin-top: -5px;
+}
+.hole-setup-edit {
+   margin-top: 0;
+   text-align: center;
+   font-size: 14px;
+   color: #666;
+}
+.hole-setup-edit button {
+   border: 0;
+   background: transparent;
+   color: var(--green-dark);
+   text-decoration: underline;
+   font-weight: 800;
+   padding: 5px 2px;
+   cursor: pointer;
+}
 
 /* Home card destinations: chevrons belong to headings, not card corners. */
-#homeScreen .info-card { padding-right: 12px; }
+#homeScreen .info-card {
+   padding-right: 12px;
+}
 #homeScreen .card-title-chevron {
   display: inline-block;
   vertical-align: baseline;
@@ -1943,60 +1970,230 @@ button {
   padding-right: 5px;
   white-space: nowrap;
 }
-#homeScreen .round-score { right: 12px; }
-.destination-screen { background: #f2f2f2; }
+#homeScreen .round-score {
+   right: 12px;
+}
+.destination-screen {
+   background: #f2f2f2;
+}
 .destination-header {
-  position: sticky; top: 0; z-index: 12;
-  min-height: 88px; background: #292929; color: #fff;
-  display: flex; align-items: flex-end; justify-content: space-between;
-  padding: 20px 18px 14px; gap: 10px;
+  position: sticky;
+   top: 0;
+   z-index: 12;
+  min-height: 88px;
+   background: #292929;
+   color: #fff;
+  display: flex;
+   align-items: flex-end;
+   justify-content: space-between;
+  padding: 20px 18px 14px;
+   gap: 10px;
 }
 .destination-back {
-  background: transparent; color: #1b912e; border: 0;
-  font: 800 16px Arial, sans-serif; padding: 10px 4px 0 0;
+  background: transparent;
+   color: #1b912e;
+   border: 0;
+  font: 800 16px Arial, sans-serif;
+   padding: 10px 4px 0 0;
   cursor: pointer;
 }
-.destination-header-label { font: 800 13px Arial, sans-serif; letter-spacing: 1px; padding-bottom: 2px; }
-.destination-content { padding: 26px 22px 100px; }
-.destination-content h1 { margin: 0 0 12px; font: 800 25px/1.1 Arial, sans-serif; color: #292929; }
-.destination-content > p { margin: 0 0 22px; color: #4c4c4c; font: 16px/1.5 Arial, sans-serif; }
-.destination-preview { background: white; border: 1px solid #d0d0d0; border-radius: 10px; padding: 20px; }
-.destination-preview h2 { margin: 0 0 10px; color: #1b912e; font: 800 18px/1.2 Arial, sans-serif; }
-.destination-preview p { margin: 0; color: #4b4b4b; font: 15px/1.5 Arial, sans-serif; }
+.destination-header-label {
+   font: 800 13px Arial, sans-serif;
+   letter-spacing: 1px;
+   padding-bottom: 2px;
+}
+.destination-content {
+   padding: 26px 22px 100px;
+}
+.destination-content h1 {
+   margin: 0 0 12px;
+   font: 800 25px/1.1 Arial, sans-serif;
+   color: #292929;
+}
+.destination-content > p {
+   margin: 0 0 22px;
+   color: #4c4c4c;
+   font: 16px/1.5 Arial, sans-serif;
+}
+.destination-preview {
+   background: white;
+   border: 1px solid #d0d0d0;
+   border-radius: 10px;
+   padding: 20px;
+}
+.destination-preview h2 {
+   margin: 0 0 10px;
+   color: #1b912e;
+   font: 800 18px/1.2 Arial, sans-serif;
+}
+.destination-preview p {
+   margin: 0;
+   color: #4b4b4b;
+   font: 15px/1.5 Arial, sans-serif;
+}
 
 /* Phase 3 Home groups: continuous fine green outline around the cards. */
-#homeScreen .home-card-group { border: 1.5px solid #1b912e; border-radius: 0 0 17px 17px; padding: 9px 9px 12px; margin: -5px 0 24px; display: flex; flex-direction: column; gap: 12px; }
-#homeScreen .home-card-group .info-card { margin: 0; width: 100%; }
-#homeScreen .recent-round-heading { margin-bottom: 5px; }
-#homeScreen .recent-group { border-top: 0; margin-top: -24px; padding-top: 28px; border-radius: 0 0 17px 17px; }
-#homeScreen .overall-group { position: relative; margin-top: 34px; padding-top: 32px; border-radius: 17px; }
-#homeScreen .overall-heading { position: absolute; top: -24px; left: 8%; right: 8%; text-align: center; font: 800 16px/1.18 Arial,sans-serif; color: #1b912e; }
-#homeScreen .overall-heading span { display: inline-block; background: #f2f2f2; padding: 0 8px; }
-#homeScreen .overall-heading small { font: 800 12px/1.2 Arial,sans-serif; }
+#homeScreen .home-card-group {
+   border: 1.5px solid #1b912e;
+   border-radius: 0 0 17px 17px;
+   padding: 9px 9px 12px;
+   margin: -5px 0 24px;
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+}
+#homeScreen .home-card-group .info-card {
+   margin: 0;
+   width: 100%;
+}
+#homeScreen .recent-round-heading {
+   margin-bottom: 5px;
+}
+#homeScreen .recent-group {
+   border-top: 0;
+   margin-top: -24px;
+   padding-top: 28px;
+   border-radius: 0 0 17px 17px;
+}
+#homeScreen .overall-group {
+   position: relative;
+   margin-top: 34px;
+   padding-top: 32px;
+   border-radius: 17px;
+}
+#homeScreen .overall-heading {
+   position: absolute;
+   top: -24px;
+   left: 8%;
+   right: 8%;
+   text-align: center;
+   font: 800 16px/1.18 Arial,sans-serif;
+   color: #1b912e;
+}
+#homeScreen .overall-heading span {
+   display: inline-block;
+   background: #f2f2f2;
+   padding: 0 8px;
+}
+#homeScreen .overall-heading small {
+   font: 800 12px/1.2 Arial,sans-serif;
+}
 /* One chevron pair per title. Remove legacy pseudo-element chevrons. */
-#homeScreen .info-card::before, #homeScreen .info-card::after, #homeScreen .card-title::after, #homeScreen .card-title.full::after { content: none !important; }
-#homeScreen .card-title-chevron { letter-spacing: -3px; padding-right: 2px; margin-left: 4px; }
-.destination-photo-header { position: sticky; top: 0; z-index: 12; }
-.destination-content { padding: 26px 20px 100px; }
-.destination-content [hidden] { display: none !important; }
-.performance-course { text-align: center; margin: 0 0 6px !important; font-size: 23px !important; }
-.performance-tees { text-align: center; margin: 0 0 22px !important; font-size: 14px !important; }
-.performance-view-card { background: #fff; border: 1px solid #ddd; border-radius: 14px; padding: 18px 14px 20px; }
-.performance-stepper { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.performance-stepper button { border: 1.5px solid #1b912e; background: white; border-radius: 28px; min-width: 50px; min-height: 43px; font: 800 24px Arial,sans-serif; color: #1b912e; cursor: pointer; }
-.performance-stepper button:disabled { color: #aaa; border-color: #e1e1e1; cursor: default; }
-.performance-view-label { text-align: center; display: flex; flex-direction: column; gap: 6px; }
-.performance-view-label span { color: #888; font-size: 11px; letter-spacing: .6px; }
-.performance-view-label strong { font-size: 17px; }
-.performance-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); text-align: center; gap: 5px; margin: 28px 0 17px; }
-.performance-metrics div { display: flex; flex-direction: column; gap: 8px; }
-.performance-metrics strong { font: 700 27px Arial,sans-serif; }
-.performance-metrics span { font: 13px Arial,sans-serif; color: #666; }
-.performance-description { text-align: center; font: 14px/1.5 Arial,sans-serif; color: #666; margin: 0 0 22px; }
-.performance-dots { display: flex; justify-content: center; gap: 8px; }
-.performance-dots span { width: 8px; height: 8px; border-radius: 50%; background: #ddd; }
-.performance-dots span.active { background: #1b912e; }
-.performance-demo-note { font: 12px/1.4 Arial,sans-serif; text-align: center; color: #888; margin: 15px 0; }
+#homeScreen .info-card::before, #homeScreen .info-card::after, #homeScreen .card-title::after, #homeScreen .card-title.full::after {
+   content: none !important;
+}
+#homeScreen .card-title-chevron {
+   letter-spacing: -3px;
+   padding-right: 2px;
+   margin-left: 4px;
+}
+.destination-photo-header {
+   position: sticky;
+   top: 0;
+   z-index: 12;
+}
+.destination-content {
+   padding: 26px 20px 100px;
+}
+.destination-content [hidden] {
+   display: none !important;
+}
+.performance-course {
+   text-align: center;
+   margin: 0 0 6px !important;
+   font-size: 23px !important;
+}
+.performance-tees {
+   text-align: center;
+   margin: 0 0 22px !important;
+   font-size: 14px !important;
+}
+.performance-view-card {
+   background: #fff;
+   border: 1px solid #ddd;
+   border-radius: 14px;
+   padding: 18px 14px 20px;
+}
+.performance-stepper {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 10px;
+}
+.performance-stepper button {
+   border: 1.5px solid #1b912e;
+   background: white;
+   border-radius: 28px;
+   min-width: 50px;
+   min-height: 43px;
+   font: 800 24px Arial,sans-serif;
+   color: #1b912e;
+   cursor: pointer;
+}
+.performance-stepper button:disabled {
+   color: #aaa;
+   border-color: #e1e1e1;
+   cursor: default;
+}
+.performance-view-label {
+   text-align: center;
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+}
+.performance-view-label span {
+   color: #888;
+   font-size: 11px;
+   letter-spacing: .6px;
+}
+.performance-view-label strong {
+   font-size: 17px;
+}
+.performance-metrics {
+   display: grid;
+   grid-template-columns: repeat(3,minmax(0,1fr));
+   text-align: center;
+   gap: 5px;
+   margin: 28px 0 17px;
+}
+.performance-metrics div {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+}
+.performance-metrics strong {
+   font: 700 27px Arial,sans-serif;
+}
+.performance-metrics span {
+   font: 13px Arial,sans-serif;
+   color: #666;
+}
+.performance-description {
+   text-align: center;
+   font: 14px/1.5 Arial,sans-serif;
+   color: #666;
+   margin: 0 0 22px;
+}
+.performance-dots {
+   display: flex;
+   justify-content: center;
+   gap: 8px;
+}
+.performance-dots span {
+   width: 8px;
+   height: 8px;
+   border-radius: 50%;
+   background: #ddd;
+}
+.performance-dots span.active {
+   background: #1b912e;
+}
+.performance-demo-note {
+   font: 12px/1.4 Arial,sans-serif;
+   text-align: center;
+   color: #888;
+   margin: 15px 0;
+}
 
 /* Accessible, low-distraction in-round hole data shortcut */
 .hole-data-inline-edit {
@@ -2013,55 +2210,147 @@ button {
   vertical-align: middle;
   white-space: nowrap;
 }
-.hole-data-inline-edit:focus-visible { outline: 2px solid #00A249; outline-offset: 2px; border-radius: 3px; }
+.hole-data-inline-edit:focus-visible {
+   outline: 2px solid #00A249;
+   outline-offset: 2px;
+   border-radius: 3px;
+}
 
 /* Phase 3 Stage 1: unobtrusive hole navigation */
-.hole-navigation { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:18px 0 10px; }
-.hole-navigation button { background:#00a249; color:white; border:0; border-radius:7px; font-weight:800; padding:12px 10px; font-size:12px; cursor:pointer; }
-.hole-navigation button:disabled { opacity:.35; cursor:default; }
-.hole-navigation span { font-size:11px; font-weight:800; text-align:center; white-space:nowrap; }
-.hole-demo-save:disabled { opacity:.4; cursor:default; }
+.hole-navigation {
+   display:flex;
+   align-items:center;
+   justify-content:space-between;
+   gap:8px;
+   margin:18px 0 10px;
+}
+.hole-navigation button {
+   background:#00a249;
+   color:white;
+   border:0;
+   border-radius:7px;
+   font-weight:800;
+   padding:12px 10px;
+   font-size:12px;
+   cursor:pointer;
+}
+.hole-navigation button:disabled {
+   opacity:.35;
+   cursor:default;
+}
+.hole-navigation span {
+   font-size:11px;
+   font-weight:800;
+   text-align:center;
+   white-space:nowrap;
+}
+.hole-demo-save:disabled {
+   opacity:.4;
+   cursor:default;
+}
 
 /* STAGE 1 REFINEMENTS — 17 OCT 2026 */
 /* Equal-sized, highly visible green navigation chevrons. */
-.hole-navigation { justify-content: space-between; gap: 18px; margin: 18px 0 10px; }
+.hole-navigation {
+   justify-content: space-between;
+   gap: 18px;
+   margin: 18px 0 10px;
+}
 .hole-navigation button {
-  flex: 0 0 76px; width: 76px; height: 64px; padding: 0;
-  border: 0; border-radius: 9px; background: transparent;
-  color: #00a249; font: 900 53px/1 Arial, sans-serif;
-  display: flex; align-items: center; justify-content: center;
+  flex: 0 0 76px;
+   width: 76px;
+   height: 64px;
+   padding: 0;
+  border: 0;
+   border-radius: 9px;
+   background: transparent;
+  color: #00a249;
+   font: 900 53px/1 Arial, sans-serif;
+  display: flex;
+   align-items: center;
+   justify-content: center;
   cursor: pointer;
 }
-.hole-navigation button:disabled { opacity: .25; cursor: default; }
-.hole-navigation button:focus-visible { outline: 3px solid #00a249; outline-offset: 2px; }
+.hole-navigation button:disabled {
+   opacity: .25;
+   cursor: default;
+}
+.hole-navigation button:focus-visible {
+   outline: 3px solid #00a249;
+   outline-offset: 2px;
+}
 /* Course name may wrap naturally at intentional phrase boundaries. */
-#holeCourseName { display: block; width: 100%; min-width: 0; overflow-wrap: normal; text-wrap: balance; }
+#holeCourseName {
+   display: block;
+   width: 100%;
+   min-width: 0;
+   overflow-wrap: normal;
+   text-wrap: balance;
+}
 /* Prevent the scoring layout from changing width when scorecard locks scrolling. */
-.hole-screen { scrollbar-gutter: stable; }
-.hole-screen.scorecard-scroll-locked { overflow-y: hidden; scrollbar-gutter: stable; }
+.hole-screen {
+   scrollbar-gutter: stable;
+}
+.hole-screen.scorecard-scroll-locked {
+   overflow-y: hidden;
+   scrollbar-gutter: stable;
+}
 /* Neutral controls until scoring interactions are activated in Stage 2. */
-.hole-choice:not(.is-selected) { color: #b8bbbe; }
-.hole-count:not(.is-confirmed) { color: #b8bbbe; }
+.hole-choice:not(.is-selected) {
+   color: #b8bbbe;
+}
+.hole-count:not(.is-confirmed) {
+   color: #b8bbbe;
+}
 /* Before any scores, even par is the neutral initial round score. */
-.scorebar-total { background: #00a249; color: #fff; }
+.scorebar-total {
+   background: #00a249;
+   color: #fff;
+}
 
 /* STAGE 1 FINISH — consistent single double-chevron glyph and compact spacing */
-.hole-navigation { margin: -15px 0 0 ; gap: 18px; }
-.hole-navigation button {
-  flex: 0 0 76px; width: 76px; height: 56px;
-  color: #00a249; font: 900 76px/.75 Arial, sans-serif;
+.hole-navigation {
+   margin: -15px 0 0 ;
+   gap: 18px;
 }
-.hole-navigation button:disabled { color: #b8bbbe; opacity: 1; }
-.hole-demo-save { margin-top: 12px; }
+.hole-navigation button {
+  flex: 0 0 76px;
+   width: 76px;
+   height: 56px;
+  color: #00a249;
+   font: 900 76px/.75 Arial, sans-serif;
+}
+.hole-navigation button:disabled {
+   color: #b8bbbe;
+   opacity: 1;
+}
+.hole-demo-save {
+   margin-top: 12px;
+}
 /* Explicit phrase break in the confirmed course-data card. */
-#courseDataStatus .course-status-line { display: block; }
+#courseDataStatus .course-status-line {
+   display: block;
+}
 
 /* Stage 2 / Step 1: clear feedback for temporary hole-stat selections. */
-.hole-choice { cursor: pointer; }
-.hole-choice.is-selected { color: #00a249; background: linear-gradient(#f4fff6, #d9f2df); }
-.hole-choice:focus-visible, .hole-adjust:focus-visible { outline: 3px solid #00a249; outline-offset: -3px; }
-.hole-adjust { cursor: pointer; }
-.hole-adjust:disabled { color: #c3c5c7; cursor: default; }
+.hole-choice {
+   cursor: pointer;
+}
+.hole-choice.is-selected {
+   color: #00a249;
+   background: linear-gradient(#f4fff6, #d9f2df);
+}
+.hole-choice:focus-visible, .hole-adjust:focus-visible {
+   outline: 3px solid #00a249;
+   outline-offset: -3px;
+}
+.hole-adjust {
+   cursor: pointer;
+}
+.hole-adjust:disabled {
+   color: #c3c5c7;
+   cursor: default;
+}
 
 /* Stage 2 refinement — all deliberately entered values share one visual language. */
 .hole-choice.is-selected,
@@ -2075,210 +2364,822 @@ button {
   cursor: pointer;
   padding: 0;
 }
-.hole-count:focus-visible { outline: 3px solid #00a249; outline-offset: -3px; }
-.hole-count:not(.is-confirmed) { background: #fff; color: #b8bbbe; }
+.hole-count:focus-visible {
+   outline: 3px solid #00a249;
+   outline-offset: -3px;
+}
+.hole-count:not(.is-confirmed) {
+   background: #fff;
+   color: #b8bbbe;
+}
 
 /* Stage 2: slightly softer selected green and compact running totals. */
-.hole-choice.is-selected, .hole-count.is-confirmed { background: #e0f5e5; color: #11652b; font-weight: 900; }
-.scorebar-live-stats { font-size: 12px; font-weight: 700; line-height: 1.45; padding: 6px 12px 10px; color: #333; overflow-wrap: break-word; }
-.hole-demo-save:disabled { opacity: .45; cursor: default; }
+.hole-choice.is-selected, .hole-count.is-confirmed {
+   background: #e0f5e5;
+   color: #11652b;
+   font-weight: 900;
+}
+.scorebar-live-stats {
+   font-size: 12px;
+   font-weight: 700;
+   line-height: 1.45;
+   padding: 6px 12px 10px;
+   color: #333;
+   overflow-wrap: break-word;
+}
+.hole-demo-save:disabled {
+   opacity: .45;
+   cursor: default;
+}
 
 /* Stage 2 refinements: more prominent Round Setup edit link. */
-.hole-setup-edit { font-size: 15px; }
-.hole-setup-edit button { font-size: 16px; padding: 7px 4px; }
+.hole-setup-edit {
+   font-size: 15px;
+}
+.hole-setup-edit button {
+   font-size: 16px;
+   padding: 7px 4px;
+}
 
 /* Stage 2: simplified score strip and contextual golf-flag help. */
-.scorebar-inner { padding-top: 14px; }
-.scorebar-result { font-size: 12px; }
-.scorebar-result.under { background: #d82027; color: white; }
-.scorebar-result.over { background: #292929; color: white; }
-.scorebar-result.even { background: #1b912e; color: white; }
-.stat-help-trigger { display: inline-flex; vertical-align: middle; align-items: center; justify-content: center; width: 26px; height: 30px; padding: 0; margin: -6px -4px -6px 0; border: 0; background: transparent; color: #777; cursor: pointer; }
-.stat-help-trigger svg { flex: none; }
-.stat-help-trigger:focus-visible { outline: 2px solid #1b912e; border-radius: 5px; }
-.stat-help-overlay[hidden] { display: none !important; }
-.stat-help-overlay { position: absolute; inset: 0; z-index: 1300; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.46); padding: 18px; }
-.stat-help-dialog { width: 100%; max-width: 340px; position: relative; background: #fff; border-radius: 12px; padding: 24px 20px 20px; box-shadow: 0 8px 28px rgba(0,0,0,.25); }
-.stat-help-dialog h2 { margin: 0 32px 10px 0; color: #1b912e; font-size: 17px; line-height: 1.2; }
-.stat-help-dialog p { margin: 0; font-size: 16px; line-height: 1.45; }
-.stat-help-close { position: absolute; right: 8px; top: 5px; border: 0; background: transparent; font-size: 30px; width: 40px; height: 40px; cursor: pointer; }
+.scorebar-inner {
+   padding-top: 14px;
+}
+.scorebar-result {
+   font-size: 12px;
+}
+.scorebar-result.under {
+   background: #d82027;
+   color: white;
+}
+.scorebar-result.over {
+   background: #292929;
+   color: white;
+}
+.scorebar-result.even {
+   background: #1b912e;
+   color: white;
+}
+.stat-help-trigger {
+   display: inline-flex;
+   vertical-align: middle;
+   align-items: center;
+   justify-content: center;
+   width: 26px;
+   height: 30px;
+   padding: 0;
+   margin: -6px -4px -6px 0;
+   border: 0;
+   background: transparent;
+   color: #777;
+   cursor: pointer;
+}
+.stat-help-trigger svg {
+   flex: none;
+}
+.stat-help-trigger:focus-visible {
+   outline: 2px solid #1b912e;
+   border-radius: 5px;
+}
+.stat-help-overlay[hidden] {
+   display: none !important;
+}
+.stat-help-overlay {
+   position: absolute;
+   inset: 0;
+   z-index: 1300;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: rgba(0,0,0,.46);
+   padding: 18px;
+}
+.stat-help-dialog {
+   width: 100%;
+   max-width: 340px;
+   position: relative;
+   background: #fff;
+   border-radius: 12px;
+   padding: 24px 20px 20px;
+   box-shadow: 0 8px 28px rgba(0,0,0,.25);
+}
+.stat-help-dialog h2 {
+   margin: 0 32px 10px 0;
+   color: #1b912e;
+   font-size: 17px;
+   line-height: 1.2;
+}
+.stat-help-dialog p {
+   margin: 0;
+   font-size: 16px;
+   line-height: 1.45;
+}
+.stat-help-close {
+   position: absolute;
+   right: 8px;
+   top: 5px;
+   border: 0;
+   background: transparent;
+   font-size: 30px;
+   width: 40px;
+   height: 40px;
+   cursor: pointer;
+}
 
 /* Stage 2: restored starting-score marker and corner-positioned golf help flags. */
-.scorebar-inner { padding-top: 7px; }
-.scorebar-start { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 0 10px; }
-.scorebar-start span { font: 800 10px/1.15 Arial,sans-serif; color: #4a4a4a; letter-spacing: .15px; white-space: nowrap; }
-.scorebar-start strong { display: grid; place-items: center; width: 54px; min-height: 43px; border-radius: 5px; background: #1b912e; color: white; font: 800 22px/1 Arial,sans-serif; }
-.hole-stat-trio > div, .hole-stat-pair > div, .hole-score-sample { position: relative; }
-.hole-stat-trio b, .hole-stat-pair b, .hole-score-sample b { padding-right: 19px; padding-left: 4px; }
-.stat-help-trigger { position: absolute; top: 2px; right: 2px; z-index: 2; width: 27px; height: 30px; margin: 0; color: #1b912e; }
-.stat-help-trigger .stracker-help-flag { width: 23px; height: 23px; display: block; }
+.scorebar-inner {
+   padding-top: 7px;
+}
+.scorebar-start {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 4px;
+   padding: 0 0 10px;
+}
+.scorebar-start span {
+   font: 800 10px/1.15 Arial,sans-serif;
+   color: #4a4a4a;
+   letter-spacing: .15px;
+   white-space: nowrap;
+}
+.scorebar-start strong {
+   display: grid;
+   place-items: center;
+   width: 54px;
+   min-height: 43px;
+   border-radius: 5px;
+   background: #1b912e;
+   color: white;
+   font: 800 22px/1 Arial,sans-serif;
+}
+.hole-stat-trio > div, .hole-stat-pair > div, .hole-score-sample {
+   position: relative;
+}
+.hole-stat-trio b, .hole-stat-pair b, .hole-score-sample b {
+   padding-right: 19px;
+   padding-left: 4px;
+}
+.stat-help-trigger {
+   position: absolute;
+   top: 2px;
+   right: 2px;
+   z-index: 2;
+   width: 27px;
+   height: 30px;
+   margin: 0;
+   color: #1b912e;
+}
+.stat-help-trigger .stracker-help-flag {
+   width: 23px;
+   height: 23px;
+   display: block;
+}
 /* Long label needs a little more room while keeping the flag inside its card. */
-.hole-stat-pair > div:nth-child(2) b { font-size: 14px; padding-left: 2px; padding-right: 23px; }
-.hole-stat-trio > div:nth-child(3) b { font-size: 14px; padding-left: 2px; padding-right: 21px; }
+.hole-stat-pair > div:nth-child(2) b {
+   font-size: 14px;
+   padding-left: 2px;
+   padding-right: 23px;
+}
+.hole-stat-trio > div:nth-child(3) b {
+   font-size: 14px;
+   padding-left: 2px;
+   padding-right: 21px;
+}
 
 /* Score Strip: compact hole/score grouping, clear saved and current holes. */
-.scorebar-panel { width: 94px; }
-.scorebar-inner { padding-left: 5px; padding-right: 5px; }
-.scorebar-row { grid-template-columns: 19px 30px; gap: 2px; justify-content: center; }
-.scorebar-number { font-weight: 400; color: #999; }
+.scorebar-panel {
+   width: 94px;
+}
+.scorebar-inner {
+   padding-left: 5px;
+   padding-right: 5px;
+}
+.scorebar-row {
+   grid-template-columns: 19px 30px;
+   gap: 2px;
+   justify-content: center;
+}
+.scorebar-number {
+   font-weight: 400;
+   color: #999;
+}
 .scorebar-row.is-saved .scorebar-number,
-.scorebar-row.active-hole .scorebar-number { font-weight: 800; color: #303030; }
-.scorebar-row.future { opacity: 1; }
-.scorebar-row.future .scorebar-result { opacity: .55; }
-.scorebar-row.future:not(.active-hole) .scorebar-number { color: #aaa; }
+.scorebar-row.active-hole .scorebar-number {
+   font-weight: 800;
+   color: #303030;
+}
+.scorebar-row.future {
+   opacity: 1;
+}
+.scorebar-row.future .scorebar-result {
+   opacity: .55;
+}
+.scorebar-row.future:not(.active-hole) .scorebar-number {
+   color: #aaa;
+}
 
 /* =========================================================
    STAGE 3A — GLOBAL WHITE / REFINED OUTLINES
    ========================================================= */
-:root { --page: #ffffff; --surface: #ffffff; }
-html, body, .app, .screen, .setup-content, .destination-content, .hole-body { background-color: #ffffff; }
+:root {
+   --page: #ffffff;
+   --surface: #ffffff;
+}
+html, body, .app, .screen, .setup-content, .destination-content, .hole-body {
+   background-color: #ffffff;
+}
 /* Existing screen sections: green titles and thin green outlined cards. */
-#homeScreen .home-card-group { border: 1px solid #1b912e; border-radius: 9px; padding: 43px 9px 12px; margin: 12px 0 22px; position: relative; background: #fff; }
-#homeScreen .recent-group { margin-top: 8px; padding-top: 13px; }
-#homeScreen .recent-round-heading { margin: 17px 0 0; min-height: auto; padding: 0 12px; color: #1b912e; }
-#homeScreen .recent-round-heading::before, #homeScreen .recent-round-heading::after { display: none; }
-#homeScreen .recent-round-heading + .recent-group { margin-top: 8px; }
-#homeScreen .overall-group { margin-top: 18px; padding-top: 52px; }
-#homeScreen .overall-heading { top: 12px; left: 8px; right: 8px; }
-#homeScreen .overall-heading span { background: #fff; }
-#homeScreen .info-card { border: 1px solid #1b912e; border-radius: 8px; background: #fff; }
-#homeScreen .card-title { color: #1b912e; }
-.setup-section-title, .course-data-label, .hole-stats-label { color: #1b912e; }
-.setup-card, .course-data-card, .course-profile-card, .hole-stat-trio > div, .hole-stat-pair > div, .hole-score-sample, .performance-view-card, .destination-preview { border-color: #1b912e; border-width: 1px; border-style: solid; border-radius: 8px; background-color: #fff; }
-.start-round, .begin-round, .hole-demo-save, .recovery-action { border-radius: 7px; }
+#homeScreen .home-card-group {
+   border: 1px solid #1b912e;
+   border-radius: 9px;
+   padding: 43px 9px 12px;
+   margin: 12px 0 22px;
+   position: relative;
+   background: #fff;
+}
+#homeScreen .recent-group {
+   margin-top: 8px;
+   padding-top: 13px;
+}
+#homeScreen .recent-round-heading {
+   margin: 17px 0 0;
+   min-height: auto;
+   padding: 0 12px;
+   color: #1b912e;
+}
+#homeScreen .recent-round-heading::before, #homeScreen .recent-round-heading::after {
+   display: none;
+}
+#homeScreen .recent-round-heading + .recent-group {
+   margin-top: 8px;
+}
+#homeScreen .overall-group {
+   margin-top: 18px;
+   padding-top: 52px;
+}
+#homeScreen .overall-heading {
+   top: 12px;
+   left: 8px;
+   right: 8px;
+}
+#homeScreen .overall-heading span {
+   background: #fff;
+}
+#homeScreen .info-card {
+   border: 1px solid #1b912e;
+   border-radius: 8px;
+   background: #fff;
+}
+#homeScreen .card-title {
+   color: #1b912e;
+}
+.setup-section-title, .course-data-label, .hole-stats-label {
+   color: #1b912e;
+}
+.setup-card, .course-data-card, .course-profile-card, .hole-stat-trio > div, .hole-stat-pair > div, .hole-score-sample, .performance-view-card, .destination-preview {
+   border-color: #1b912e;
+   border-width: 1px;
+   border-style: solid;
+   border-radius: 8px;
+   background-color: #fff;
+}
+.start-round, .begin-round, .hole-demo-save, .recovery-action {
+   border-radius: 7px;
+}
 /* Recovery screen */
-.recovery-screen { background: #fff; }
-.recovery-content { padding: 25px 20px 100px; }
-.recovery-alert { font: 800 23px/1.16 Arial,sans-serif; color: #c62828; text-align: center; margin: 8px 0 25px; }
-.recovery-card { border: 1px solid #1b912e; border-radius: 9px; padding: 20px 15px 22px; background: #fff; text-align: center; }
-.recovery-card h2 { margin: 0 0 13px; font: 800 20px/1.18 Arial,sans-serif; color: #1b912e; overflow-wrap: anywhere; }
-.recovery-type { font-size: 16px; margin: 0 0 8px; }
-.recovery-progress { font-size: 17px; font-weight: 700; margin: 0 0 8px; }
-.recovery-current { font-size: 15px; color: #555; margin: 0 0 25px; }
-.recovery-action { display: block; width: 100%; min-height: 56px; padding: 10px; border: 0; background: #1b912e; color: white; font: 800 18px/1.2 Arial,sans-serif; cursor: pointer; }
-.recovery-new { margin-top: 14px; }
-.recovery-new.is-confirming { background: #c62828; animation: recoveryConfirmPulse 1s ease-in-out infinite; }
-@keyframes recoveryConfirmPulse { 0%,100% {opacity:1;} 50% {opacity:.65;} }
-@media (prefers-reduced-motion: reduce) { .recovery-new.is-confirming { animation: none; } }
+.recovery-screen {
+   background: #fff;
+}
+.recovery-content {
+   padding: 25px 20px 100px;
+}
+.recovery-alert {
+   font: 800 23px/1.16 Arial,sans-serif;
+   color: #c62828;
+   text-align: center;
+   margin: 8px 0 25px;
+}
+.recovery-card {
+   border: 1px solid #1b912e;
+   border-radius: 9px;
+   padding: 20px 15px 22px;
+   background: #fff;
+   text-align: center;
+}
+.recovery-card h2 {
+   margin: 0 0 13px;
+   font: 800 20px/1.18 Arial,sans-serif;
+   color: #1b912e;
+   overflow-wrap: anywhere;
+}
+.recovery-type {
+   font-size: 16px;
+   margin: 0 0 8px;
+}
+.recovery-progress {
+   font-size: 17px;
+   font-weight: 700;
+   margin: 0 0 8px;
+}
+.recovery-current {
+   font-size: 15px;
+   color: #555;
+   margin: 0 0 25px;
+}
+.recovery-action {
+   display: block;
+   width: 100%;
+   min-height: 56px;
+   padding: 10px;
+   border: 0;
+   background: #1b912e;
+   color: white;
+   font: 800 18px/1.2 Arial,sans-serif;
+   cursor: pointer;
+}
+.recovery-new {
+   margin-top: 14px;
+   border: 2px solid #1b912e;
+   background: #fff;
+   color: #1b912e;
+}
+.recovery-new.is-confirming {
+   border-color: #c62828;
+   color: #fff;
+   background: #c62828;
+   animation: recoveryConfirmPulse 1s ease-in-out infinite;
+}
+@keyframes recoveryConfirmPulse {
+   0%,100% {
+    opacity:1;
+  } 50% {
+    opacity:.65;
+  } 
+}
+@media (prefers-reduced-motion: reduce) {
+   .recovery-new.is-confirming {
+     animation: none;
+  } 
+}
 
 /* Stage 3A final polish: consistent Home section headings inside outlines. */
-#homeScreen .recent-group { margin-top: 12px; padding-top: 10px; }
-#homeScreen .recent-group .recent-round-heading {
-  position: static; margin: 0 0 12px; padding: 0 6px;
-  min-height: 38px; display: flex; align-items: center; justify-content: center;
-  text-align: center; color: #1b912e;
+#homeScreen .recent-group {
+   margin-top: 12px;
+   padding-top: 10px;
 }
-#homeScreen .recent-group .recent-round-heading span { background: transparent; }
+#homeScreen .recent-group .recent-round-heading {
+  position: static;
+   margin: 0 0 12px;
+   padding: 0 6px;
+  min-height: 38px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+  text-align: center;
+   color: #1b912e;
+}
+#homeScreen .recent-group .recent-round-heading span {
+   background: transparent;
+}
 #homeScreen .recent-group .recent-round-heading::before,
-#homeScreen .recent-group .recent-round-heading::after { display: none; }
-#homeScreen .recent-group .info-card { margin-top: 0; }
+#homeScreen .recent-group .recent-round-heading::after {
+   display: none;
+}
+#homeScreen .recent-group .info-card {
+   margin-top: 0;
+}
 /* Hole identification remains beneath the sticky course bar while scoring. */
-#holeStatsScreen .hole-course-strip { top: 0; }
+#holeStatsScreen .hole-course-strip {
+   top: 0;
+}
 #holeStatsScreen .hole-current {
-  position: sticky; top: 62px; z-index: 19;
-  background: #fff; padding: 12px 20px 13px;
+  position: sticky;
+   top: 62px;
+   z-index: 19;
+  background: #fff;
+   padding: 12px 20px 13px;
   border-bottom: 1px solid #d8e3d9;
 }
-#holeStatsScreen .hole-body { padding-top: 5px; }
-#holeStatsScreen .hole-current strong { font-size: 28px; }
+#holeStatsScreen .hole-body {
+   padding-top: 5px;
+}
+#holeStatsScreen .hole-current strong {
+   font-size: 28px;
+}
 @media (max-width: 430px) {
-  #holeStatsScreen .hole-current { padding: 9px 20px 10px; }
-  #holeStatsScreen .hole-current strong { font-size: 26px; }
+  #holeStatsScreen .hole-current {
+     padding: 9px 20px 10px;
+  }
+  #holeStatsScreen .hole-current strong {
+     font-size: 26px;
+  }
 }
 
-#holeStatsScreen .hole-course-strip { min-height: 62px; box-sizing: border-box; }
+#holeStatsScreen .hole-course-strip {
+   min-height: 62px;
+   box-sizing: border-box;
+}
 
 
 /* =========================================================
    AT THE TURN — overlay and preferences
    ========================================================= */
-.turn-settings-link { justify-self:end; border:0; background:none; color:#555; font-size:12px; font-weight:700; padding:0 2px; cursor:pointer; }
-.at-turn-overlay { position:absolute; inset:0 0 76px; z-index:900; background:#183d2c; color:white; overflow:auto; opacity:0; transition:opacity .35s ease; }
-.at-turn-overlay[hidden], .turn-settings-overlay[hidden] { display:none!important; }
-.at-turn-overlay.turn-visible { opacity:1; }
-.turn-inner { min-height:100%; display:flex; flex-direction:column; justify-content:center; padding:25px 22px 22px; gap:23px; text-align:center; }
-.turn-kicker { color:#b8d4bf; font-size:10px; letter-spacing:.7px; font-weight:700; }
-#atTurnTitle { font-family:Arial,sans-serif; font-size:34px; letter-spacing:1px; margin:12px 0 4px; font-weight:900; }
-.turn-subtitle { color:#d0e5d4; font-size:19px; margin:0; }
-.turn-card { background:#fff; color:#26332b; padding:23px 19px; border-radius:16px; box-shadow:0 8px 24px #0002; }
-.turn-eyebrow { color:#666; font-size:12px; font-weight:700; letter-spacing:1px; }
-.turn-score { color:#1b912e; font-size:36px; font-weight:900; margin:9px 0; }
-.turn-card h2 { font-size:23px; line-height:1.16; margin:8px 0 13px; }
-.turn-card p { font-size:17px; line-height:1.38; margin:8px 0; }
-.turn-course-context { color:#44624c; font-size:15px!important; }
-.turn-bottom p { font-size:18px; line-height:1.3; font-weight:700; margin:0 0 18px; }
-.turn-continue { width:100%; border:0; border-radius:12px; padding:17px 10px; background:#1b912e; color:#fff; font-weight:900; font-size:18px; cursor:pointer; }
-.turn-enter { opacity:0; transform:translateY(65px); }
-.turn-visible .turn-enter { animation:turnRise .55s cubic-bezier(.2,.8,.2,1) both; }
-.turn-visible .turn-enter-one { animation-delay:.15s; }
-.turn-visible .turn-enter-two { animation-delay:.36s; }
-.turn-visible .turn-enter-three { animation-delay:.6s; }
-@keyframes turnRise { to { opacity:1; transform:translateY(0); } }
-.turn-settings-overlay { position:absolute; inset:0; z-index:1100; background:#0009; display:flex; align-items:center; justify-content:center; padding:20px; }
-.turn-settings-card { width:100%; background:white; color:#333; border-radius:14px; padding:23px; }
-.turn-settings-card h2 { font-size:20px; margin:0 0 20px; }
-.turn-settings-row { display:flex; align-items:center; justify-content:space-between; gap:15px; }
-.turn-settings-row strong, .turn-settings-row small { display:block; }
-.turn-settings-row small { margin-top:6px; font-size:13px; line-height:1.3; color:#666; }
-.turn-settings-row input { width:26px; height:26px; accent-color:#1b912e; flex:none; }
-#turnSettingsClose { width:100%; background:#1b912e; color:#fff; border:0; border-radius:9px; margin-top:25px; padding:13px; font-weight:800; }
-@media(prefers-reduced-motion:reduce) { .at-turn-overlay { transition:none; } .turn-visible .turn-enter { animation:none; opacity:1; transform:none; } }
+.turn-settings-link {
+   justify-self:end;
+   border:0;
+   background:none;
+   color:#555;
+   font-size:12px;
+   font-weight:700;
+   padding:0 2px;
+   cursor:pointer;
+}
+.at-turn-overlay {
+   position:absolute;
+   inset:0 0 76px;
+   z-index:900;
+   background:#183d2c;
+   color:white;
+   overflow:auto;
+   opacity:0;
+   transition:opacity .35s ease;
+}
+.at-turn-overlay[hidden], .turn-settings-overlay[hidden] {
+   display:none!important;
+}
+.at-turn-overlay.turn-visible {
+   opacity:1;
+}
+.turn-inner {
+   min-height:100%;
+   display:flex;
+   flex-direction:column;
+   justify-content:center;
+   padding:25px 22px 22px;
+   gap:23px;
+   text-align:center;
+}
+.turn-kicker {
+   color:#b8d4bf;
+   font-size:10px;
+   letter-spacing:.7px;
+   font-weight:700;
+}
+#atTurnTitle {
+   font-family:Arial,sans-serif;
+   font-size:34px;
+   letter-spacing:1px;
+   margin:12px 0 4px;
+   font-weight:900;
+}
+.turn-subtitle {
+   color:#d0e5d4;
+   font-size:19px;
+   margin:0;
+}
+.turn-card {
+   background:#fff;
+   color:#26332b;
+   padding:23px 19px;
+   border-radius:16px;
+   box-shadow:0 8px 24px #0002;
+}
+.turn-eyebrow {
+   color:#666;
+   font-size:12px;
+   font-weight:700;
+   letter-spacing:1px;
+}
+.turn-score {
+   color:#1b912e;
+   font-size:36px;
+   font-weight:900;
+   margin:9px 0;
+}
+.turn-card h2 {
+   font-size:23px;
+   line-height:1.16;
+   margin:8px 0 13px;
+}
+.turn-card p {
+   font-size:17px;
+   line-height:1.38;
+   margin:8px 0;
+}
+.turn-course-context {
+   color:#44624c;
+   font-size:15px!important;
+}
+.turn-bottom p {
+   font-size:18px;
+   line-height:1.3;
+   font-weight:700;
+   margin:0 0 18px;
+}
+.turn-continue {
+   width:100%;
+   border:0;
+   border-radius:12px;
+   padding:17px 10px;
+   background:#1b912e;
+   color:#fff;
+   font-weight:900;
+   font-size:18px;
+   cursor:pointer;
+}
+.turn-enter {
+   opacity:0;
+   transform:translateY(65px);
+}
+.turn-visible .turn-enter {
+   animation:turnRise .55s cubic-bezier(.2,.8,.2,1) both;
+}
+.turn-visible .turn-enter-one {
+   animation-delay:.15s;
+}
+.turn-visible .turn-enter-two {
+   animation-delay:.36s;
+}
+.turn-visible .turn-enter-three {
+   animation-delay:.6s;
+}
+@keyframes turnRise {
+   to {
+     opacity:1;
+     transform:translateY(0);
+  } 
+}
+.turn-settings-overlay {
+   position:absolute;
+   inset:0;
+   z-index:1100;
+   background:#0009;
+   display:flex;
+   align-items:center;
+   justify-content:center;
+   padding:20px;
+}
+.turn-settings-card {
+   width:100%;
+   background:white;
+   color:#333;
+   border-radius:14px;
+   padding:23px;
+}
+.turn-settings-card h2 {
+   font-size:20px;
+   margin:0 0 20px;
+}
+.turn-settings-row {
+   display:flex;
+   align-items:center;
+   justify-content:space-between;
+   gap:15px;
+}
+.turn-settings-row strong, .turn-settings-row small {
+   display:block;
+}
+.turn-settings-row small {
+   margin-top:6px;
+   font-size:13px;
+   line-height:1.3;
+   color:#666;
+}
+.turn-settings-row input {
+   width:26px;
+   height:26px;
+   accent-color:#1b912e;
+   flex:none;
+}
+#turnSettingsClose {
+   width:100%;
+   background:#1b912e;
+   color:#fff;
+   border:0;
+   border-radius:9px;
+   margin-top:25px;
+   padding:13px;
+   font-weight:800;
+}
+@media(prefers-reduced-motion:reduce) {
+   .at-turn-overlay {
+     transition:none;
+  } .turn-visible .turn-enter {
+     animation:none;
+     opacity:1;
+     transform:none;
+  } 
+}
 
 /* GLOBAL NAVIGATION — scoped to the working AT THE TURN build */
 /* Compact outlined hamburger, contained entirely within the header zone. */
-.global-menu-button { position:absolute; z-index:1100; right:14px; top:24px; width:44px; height:44px; padding:0; display:flex; align-items:center; justify-content:center; border:1.5px solid #fff; border-radius:9px; background:#242424; color:#fff; box-shadow:none; cursor:pointer; }
-.global-menu-button:focus-visible { outline:3px solid #74d18b; outline-offset:2px; }
-.menu-lines { display:flex; width:23px; flex-direction:column; gap:5px; }
-.menu-lines span { display:block; width:100%; height:2px; border-radius:2px; background:currentColor; }
+.global-menu-button {
+   position:absolute;
+   z-index:1100;
+   right:14px;
+   top:24px;
+   width:44px;
+   height:44px;
+   padding:0;
+   display:flex;
+   align-items:center;
+   justify-content:center;
+   border:1.5px solid #fff;
+   border-radius:9px;
+   background: rgba(255,255,255,.20);
+   color:#fff;
+   box-shadow:none;
+   cursor:pointer;
+}
+.global-menu-button:focus-visible {
+   outline:3px solid #74d18b;
+   outline-offset:2px;
+}
+.menu-lines {
+   display:flex;
+   width:23px;
+   flex-direction:column;
+   gap:5px;
+}
+.menu-lines span {
+   display:block;
+   width:100%;
+   height:2px;
+   border-radius:2px;
+   background:currentColor;
+}
 /* Keep the menu clear of the right-hand score strip when expanded. */
-.global-menu-panel {position:absolute;z-index:1110;right:14px;top:74px;width:min(310px,calc(100% - 20px));max-height:calc(100% - 150px);overflow:auto;background:white;border:2px solid #236c3d;border-radius:13px;box-shadow:0 8px 25px #0005;padding:9px}
-.global-menu-panel[hidden],.new-round-confirm[hidden],.home-new-round[hidden],.global-menu-button[hidden]{display:none!important}
-.global-menu-head{display:flex;align-items:center;justify-content:space-between;padding:5px 9px 10px;color:#175d35}
-.global-menu-head button{border:0;background:none;font-size:26px;cursor:pointer}
-.global-menu-panel>button{display:block;width:100%;text-align:left;padding:12px;border:0;border-bottom:1px solid #ddd;background:#fff;font-weight:700;cursor:pointer}
-.global-menu-panel>button:disabled{opacity:.4;cursor:default}
-.global-menu-panel>button.global-menu-new{color:#a12b2b}
-.home-new-round{width:100%;min-height:54px;border:0;border-radius:15px;background:#a72d2d;color:white;font-size:20px;font-weight:800;cursor:pointer}
-.new-round-confirm{position:absolute;z-index:1300;inset:0;display:flex;align-items:center;justify-content:center;background:#0009;padding:18px}
-.new-round-confirm-card{background:#fff;width:100%;border-radius:14px;padding:24px 18px;text-align:center;box-shadow:0 8px 30px #0006}
-.new-round-confirm-card h2{margin:0 0 10px;font-size:22px}
-.new-round-confirm-card p{line-height:1.4}
-.new-round-confirm-card button{display:block;width:100%;margin-top:12px;padding:14px 8px;border-radius:10px;font-weight:800;cursor:pointer}
-#keepCurrentRoundBtn{background:#168b38;color:white;border:0}
-#confirmNewRoundBtn{background:#a72d2d;color:white;border:0}
+.global-menu-panel {
+  position:absolute;
+  z-index:1110;
+  right:14px;
+  top:74px;
+  width:min(310px,calc(100% - 20px));
+  max-height:calc(100% - 150px);
+  overflow:auto;
+  background:white;
+  border:2px solid #236c3d;
+  border-radius:13px;
+  box-shadow:0 8px 25px #0005;
+  padding:9px
+}
+.global-menu-panel[hidden],.new-round-confirm[hidden],.home-new-round[hidden],.global-menu-button[hidden]{
+  display:none!important
+}
+.global-menu-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:5px 9px 10px;
+  color:#175d35
+}
+.global-menu-head button{
+  border:0;
+  background:none;
+  font-size:26px;
+  cursor:pointer
+}
+.global-menu-panel>button{
+  display:block;
+  width:100%;
+  text-align:left;
+  padding:12px;
+  border:0;
+  border-bottom:1px solid #ddd;
+  background:#fff;
+  font-weight:700;
+  cursor:pointer
+}
+.global-menu-panel>button:disabled{
+  opacity:.4;
+  cursor:default
+}
+.global-menu-panel>button.global-menu-new{
+  color:#a12b2b
+}
+.home-new-round{
+  width:100%;
+  min-height:54px;
+  border:0;
+  border-radius:15px;
+  background:#a72d2d;
+  color:white;
+  font-size:20px;
+  font-weight:800;
+  cursor:pointer
+}
+.new-round-confirm{
+  position:absolute;
+  z-index:1300;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0009;
+  padding:18px
+}
+.new-round-confirm-card{
+  background:#fff;
+  width:100%;
+  border-radius:14px;
+  padding:24px 18px;
+  text-align:center;
+  box-shadow:0 8px 30px #0006
+}
+.new-round-confirm-card h2{
+  margin:0 0 10px;
+  font-size:22px
+}
+.new-round-confirm-card p{
+  line-height:1.4
+}
+.new-round-confirm-card button{
+  display:block;
+  width:100%;
+  margin-top:12px;
+  padding:14px 8px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer
+}
+#keepCurrentRoundBtn{
+  background:#168b38;
+  color:white;
+  border:0
+}
+#confirmNewRoundBtn{
+  background:#a72d2d;
+  color:white;
+  border:0
+}
 
 /* Scorecard takes priority over global navigation when expanded. */
-.scorebar-panel.is-open { z-index: 1200; }
-.scorebar-panel.is-open ~ .global-menu-button { display: none !important; }
+.scorebar-panel.is-open {
+   z-index: 1200;
+}
+.scorebar-panel.is-open ~ .global-menu-button {
+   display: none !important;
+}
 
 /* Score strip refinements: preserve panel geometry and lower only its contents. */
-.scorebar-panel { border-top-left-radius: 9px; }
-.scorebar-inner { padding-top: 73px; }
-.scorebar-start strong.even { background: #1b912e; }
-.scorebar-start strong.under { background: #d82027; }
-.scorebar-start strong.over { background: #292929; }
+.scorebar-panel {
+   border-top-left-radius: 9px;
+}
+.scorebar-inner {
+   padding-top: 73px;
+}
+.scorebar-start strong.even {
+   background: #1b912e;
+}
+.scorebar-start strong.under {
+   background: #d82027;
+}
+.scorebar-start strong.over {
+   background: #292929;
+}
 
 /* Score strip current-hole photo: text is live, not embedded in the image. */
-.scorebar-inner { padding-top: 63px; }
+.scorebar-inner {
+   padding-top: 63px;
+}
 .scorebar-hole-photo {
-  position: relative; width: 100%; height: 64px; margin: -58px auto 25px;
-  border-radius: 7px 7px 2px 2px; overflow: hidden;
+  position: relative;
+   width: 100%;
+   height: 64px;
+   margin: -58px auto 25px;
+  border-radius: 7px 7px 2px 2px;
+   overflow: hidden;
   background: linear-gradient(to bottom, rgba(0,0,0,.80), rgba(0,0,0,.06) 75%),
     url("images/score-strip-hole.png") center 35% / auto 85px no-repeat;
-  display: flex; align-items: flex-start; justify-content: center;
+  display: flex;
+   align-items: flex-start;
+   justify-content: center;
   padding-top: 5px;
 }
-.scorebar-hole-photo strong { color: white; font: 800 12px/1.1 Arial,sans-serif;
-  white-space: nowrap; text-shadow: 0 1px 3px #000; }
+.scorebar-hole-photo strong {
+   color: white;
+   font: 800 12px/1.1 Arial,sans-serif;
+  white-space: nowrap;
+   text-shadow: 0 1px 3px #000;
+}
 
 /* Round total progress stays inside the score tile. */
 .scorebar-start strong {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 3px; min-height: 55px; padding: 5px 1px 4px;
+  display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+  gap: 3px;
+   min-height: 55px;
+   padding: 5px 1px 4px;
 }
 .scorebar-start strong small {
-  display: block; font: 700 8px/1.15 Arial, sans-serif;
-  letter-spacing: -0.15px; color: #fff; white-space: nowrap;
+  display: block;
+   font: 700 8px/1.15 Arial, sans-serif;
+  letter-spacing: -0.15px;
+   color: #fff;
+   white-space: nowrap;
   transform: translateY(5px);
 }
 
@@ -2296,20 +3197,156 @@ html, body, .app, .screen, .setup-content, .destination-content, .hole-body { ba
    ========================================================= */
 @media (max-width: 430px) {
   /* Constrain the home grid to the viewport and use symmetric gutters. */
-  #homeScreen .content { width: 100%; min-width: 0; padding-left: 23px; padding-right: 23px; box-sizing: border-box; }
-  #homeScreen .content > *, #homeScreen .home-card-group, #homeScreen .info-card { min-width: 0; max-width: 100%; }
+  #homeScreen .content {
+     width: 100%;
+     min-width: 0;
+     padding-left: 23px;
+     padding-right: 23px;
+     box-sizing: border-box;
+  }
+  #homeScreen .content > *, #homeScreen .home-card-group, #homeScreen .info-card {
+     min-width: 0;
+     max-width: 100%;
+  }
   /* Reduce space between cards, without reducing the card content. */
-  #homeScreen .home-card-group { gap: 8px; }
-  #homeScreen .overall-group { margin-top: 13px; }
+  #homeScreen .home-card-group {
+     gap: 8px;
+  }
+  #homeScreen .overall-group {
+     margin-top: var(--home-section-spacing);
+  }
   /* Global menu is positioned separately for the three header heights. */
   .app:has(#roundSetupScreen:not([hidden])) .global-menu-button,
-  .app:has(#courseDataScreen:not([hidden])) .global-menu-button { top: 19px; }
-  .app:has(#holeStatsScreen:not([hidden])) .global-menu-button { top: 6px; }
+  .app:has(#courseDataScreen:not([hidden])) .global-menu-button {
+     top: 19px;
+  }
+  .app:has(#holeStatsScreen:not([hidden])) .global-menu-button {
+     top: 6px;
+  }
 }
 /* Compact the score strip enough to show hole 18 above the fixed footer.
    Preserve the current-hole photo and the full set of score indicators. */
-.scorebar-hole-photo { margin-bottom: 10px; }
-.scorebar-start { padding-bottom: 4px; gap: 2px; }
-.scorebar-start strong { min-height: 47px; }
-.scorebar-rows { gap: 2px; }
-.scorebar-total { margin-bottom: 5px; }
+.scorebar-hole-photo {
+   margin-bottom: 10px;
+}
+.scorebar-start {
+   padding-bottom: 4px;
+   gap: 2px;
+}
+.scorebar-start strong {
+   min-height: 47px;
+}
+.scorebar-rows {
+   gap: 2px;
+}
+.scorebar-total {
+   margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   HOME SCREEN — SECTION SPACING CONTROL
+   =========================================================
+   Change this one value to adjust the vertical space
+   before the Overall / My Game section on the Home screen.
+   This does NOT change spacing inside the outlined groups.
+   ========================================================= */
+#homeScreen {
+  --home-section-spacing: 0px;
+}
+
+#homeScreen .overall-group {
+  margin-top: var(--home-section-spacing);
+}
+
+/* ROUND COMPLETE — inherits At the Turn layout and entrance animation. */
+.round-complete-overlay { background:#8c1e2b; }
+.round-complete-overlay .turn-kicker { color:#ffd7da; }
+.round-complete-overlay .turn-subtitle { color:#ffe0e2; }
+.round-complete-overlay .turn-score { color:#a52232; }
+.round-complete-overlay .turn-continue { background:#fff; color:#81202b; }
+.round-complete-overlay .round-complete-later { width:100%; margin-top:12px; padding:15px 10px; border:1.5px solid #fff; border-radius:12px; background:transparent; color:#fff; font-weight:800; font-size:17px; cursor:pointer; }
+#roundCompleteTitle { font-family:Arial,sans-serif; font-size:clamp(29px,8vw,36px); letter-spacing:.4px; margin:10px 0; }
+
+/* Scoreboard scoring colors shared by ATT and RC. */
+.turn-score.score-under-par { color:#c62828; }
+.turn-score.score-even-par { color:#1b912e; }
+.turn-score.score-over-par { color:#303030; }
+.completed-clubhouse-action { display:block; width:100%; border:0; border-radius:12px; padding:15px 12px; background:#8c1e2b; color:#fff; font-weight:800; font-size:17px; cursor:pointer; }
+.completed-clubhouse-action[hidden] { display:none !important; }
+.completed-clubhouse-hole { position:sticky; top:0; z-index:40; border-radius:0; font-size:15px; }
+
+/* Completed-round navigation refinement — one course bar, no floating red header. */
+#holeStatsScreen .hole-course-strip.is-round-complete { background:#8c1e2b; }
+#holeStatsScreen .hole-course-strip .hole-clubhouse-link { display:block; width:100%; padding:5px 0 2px; text-align:left; background:transparent; border:0; color:#fff; font:700 13px Calibri,Arial,sans-serif; letter-spacing:.25px; cursor:pointer; }
+#holeStatsScreen .hole-course-strip .hole-clubhouse-link[hidden] { display:none!important; }
+/* Consistent Home action button geometry and typography. */
+#homeScreen .start-round, #homeScreen .completed-clubhouse-action, #homeScreen .home-new-round { box-sizing:border-box; width:100%; min-height:62px; height:62px; border-radius:19px; font-family:Calibri,Arial,sans-serif; font-size:21px; font-weight:800; letter-spacing:.2px; line-height:1.1; text-align:center; padding:0 14px; }
+#homeScreen .start-round { border:2px solid #1b912e; background:#1b912e; color:white; }
+#homeScreen .completed-clubhouse-action { border:2px solid #8c1e2b; background:#fff; color:#8c1e2b; }
+#homeScreen .home-new-round { border:2px solid #1b912e; background:#fff; color:#1b912e; }
+
+
+/* Completed round: all three Home actions have equal outlined prominence. */
+#homeScreen .start-round.is-completed-round {
+  border: 2px solid #1b912e;
+  background: #fff;
+  color: #1b912e;
+}
+#homeScreen .start-round.is-completed-round .double-chevron {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  font-size: 26px;
+}
+
+/* Completed round: use the same static chevrons as the other Home actions. */
+#homeScreen .start-round.is-completed-round .double-chevron {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: .2px;
+  animation: none;
+  transform: none;
+  opacity: 1;
+}
+
+/* Recovery status: Clubhouse-style one-time character reveal. */
+#roundRecoveryScreen .recovery-alert-first,
+#roundRecoveryScreen .recovery-alert-second { display: block; }
+#roundRecoveryScreen .recovery-alert-second { white-space: nowrap; font-size: clamp(18px, 5.2vw, 23px); }
+#roundRecoveryScreen .recovery-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(75px, 0, 0);
+  animation: recovery-letter-arrive 620ms cubic-bezier(.18,.75,.25,1) both;
+  animation-delay: var(--recovery-letter-delay, 0ms);
+}
+#roundRecoveryScreen .recovery-space { white-space: pre; }
+@keyframes recovery-letter-arrive {
+  from { opacity: 0; transform: translate3d(75px, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #roundRecoveryScreen .recovery-letter { animation: none; opacity: 1; transform: none; }
+}
+
+/* Recovery: only the numeric relative-to-par value carries performance color. */
+#roundRecoveryScreen .recovery-to-par-value.is-under-par { color: #e22323; }
+#roundRecoveryScreen .recovery-to-par-value.is-even-par { color: #1b912e; }
+#roundRecoveryScreen .recovery-to-par-value.is-over-par { color: #303030; }
+
+/* ROUND COMPLETE BILLBOARD — balanced vertical placement and round-length label. */
+#roundCompleteOverlay .turn-inner {
+  position: relative;
+  top: -22px;
+}
+#roundCompleteOverlay .turn-card .turn-eyebrow {
+  font-family: Arial, sans-serif;
+  font-size: clamp(13px, 3.8vw, 16px);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+}

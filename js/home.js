@@ -39,12 +39,23 @@ let activeHoleNumber = null;
 let roundHoleOrder = [];
 let roundStartingHole = null;
 let turnShownThisRound = false;
+let roundCompleteAcknowledged = false;
 // Stage 2: temporary, in-memory drafts keyed by actual course hole number.
 const holeStatDrafts = new Map();
 const savedHoleStats = new Map();
+// Shared completion check for Home, Recovery, and the completed scorecard.
+function isRoundCompletedForReview() {
+  return roundInProgress && roundCompleteAcknowledged &&
+    roundHoleOrder.length > 0 && roundHoleOrder.every(hole => savedHoleStats.has(hole));
+}
 function updateHomeRoundButton() {
-  const label = document.querySelector('.start-round > span:first-child');
-  if (label) label.textContent = roundInProgress ? 'RESUME ROUND ' : 'START A NEW ROUND ';
+  const completed = isRoundCompletedForReview();
+  const button = document.querySelector('#homeScreen .start-round');
+  const label = button?.querySelector('span:first-child');
+  if (label) label.textContent = completed ? 'RETURN TO LAST ROUND ' : roundInProgress ? 'RESUME ROUND ' : 'START A NEW ROUND ';
+  button?.classList.toggle('is-completed-round', completed);
+  const chevron = button?.querySelector('.double-chevron');
+  if (chevron) chevron.textContent = completed ? '»»' : '»';
   const newButton = document.getElementById('homeNewRoundBtn');
   if (newButton) newButton.hidden = !roundInProgress;
 }
@@ -60,6 +71,7 @@ function showHome() {
   homeScreen.hidden = false;
   bottomNav.hidden = false;
   updateHomeRoundButton();
+  updateCompletedRoundActions();
   persistActiveRound();
   window.scrollTo({
     top: 0,
@@ -160,6 +172,9 @@ document.getElementById('performanceNext').addEventListener('click', () => { per
 function showHomeDestination(action) {
   const destination = homeDestinations[action];
   if (!destination) return;
+  // Leave the launch-time recovery screen before opening a footer destination.
+  // This only changes visibility; the active round and saved holes are preserved.
+  roundRecoveryScreen.hidden = true;
   setScorebarOpen(false);
   scorebarPanel.hidden = true;
   holeStatsScreen.hidden = true;
@@ -169,8 +184,12 @@ function showHomeDestination(action) {
   homeDestinationScreen.hidden = false;
   bottomNav.hidden = false;
   const recent = action === 'last-round' || action === 'summary';
+  const clubhouse = action === 'clubhouse';
+  document.getElementById('destinationPhotoHeader').classList.toggle('is-clubhouse-header', clubhouse);
   document.getElementById('recentPerformanceViews').hidden = !recent;
-  document.getElementById('otherDestinationViews').hidden = recent;
+  document.getElementById('clubhousePreview').hidden = !clubhouse;
+  document.getElementById('otherDestinationViews').hidden = recent || clubhouse;
+  if (clubhouse) renderClubhousePreview();
   document.getElementById('destinationHeaderKicker').textContent = recent ? 'RECENT PERFORMANCE' : 'YOUR GOLF GAME';
   document.getElementById('destinationHeaderName').textContent = recent ? 'Isaiah Gonzales' : destination.title;
   if (recent) {
@@ -184,6 +203,27 @@ function showHomeDestination(action) {
   }
   homeDestinationScreen.scrollTop = 0;
 }
+// Team-ready boundary: Clubhouse receives only the currently selected player's round context.
+function renderClubhousePreview() {
+  window.StrackerClubhouse.render({
+    selectedCourse, roundInProgress, roundTypeSelect, roundLengthSelect,
+    roundHoleOrder, savedHoleStats, holeParForNumber, formatToPar,
+    roundCompleted: isRoundCompletedForReview()
+  });
+}
+document.getElementById('clubhouseReturnRound').addEventListener('click', () => {
+  if (!roundInProgress) return;
+  persistActiveRound();
+  showHoleStatsDemo(true);
+});
+// Keep the app-level menu aligned with the scrolling Clubhouse photo header.
+const clubhouseScrollScreen = document.getElementById('homeDestinationScreen');
+clubhouseScrollScreen.addEventListener('scroll', () => {
+  const clubhouseVisible = !clubhouseScrollScreen.hidden &&
+    !document.getElementById('clubhousePreview').hidden;
+  document.querySelector('.app').style.setProperty('--clubhouse-scroll',
+    `${clubhouseVisible ? Math.min(176, clubhouseScrollScreen.scrollTop) : 0}px`);
+}, { passive: true });
 document.getElementById('destinationBackBtn').addEventListener('click', showHome);
 document.querySelectorAll('#homeScreen [data-action]:not(.start-round)').forEach(button => {
   button.addEventListener('click', () => showHomeDestination(button.dataset.action));
@@ -1342,6 +1382,7 @@ document
       holeStatDrafts.clear();
       savedHoleStats.clear();
       turnShownThisRound = false;
+      roundCompleteAcknowledged = false;
       initializeRoundHoleNavigation();
     }
     showHoleStatsDemo(returningToRound);
@@ -1697,6 +1738,7 @@ document.querySelector('.hole-demo-save').addEventListener('click', () => {
   renderSampleScorebar();
   persistActiveRound();
   maybeShowAtTurn();
+  maybeShowRoundComplete();
 });
 
 function setScorebarOpen(open) {
@@ -1765,8 +1807,10 @@ function showHoleStatsDemo(resume = false) {
   roundSetupScreen.hidden = true;
   courseDataScreen.hidden = true;
   bottomNav.hidden = true;
+  homeDestinationScreen.hidden = true;
   holeStatsScreen.hidden = false;
   scorebarPanel.hidden = false;
+  updateCompletedRoundActions();
   if (!resume) holeStatsScreen.scrollTop = 0;
   const name = selectedCourse?.name || selectedCourse?.course_name || 'ROUND IN PROGRESS';
   renderCourseNameHeading(name);
@@ -1896,8 +1940,44 @@ function showRoundRecovery() {
   }
   const delta = total - parTotal;
   const relative = delta === 0 ? 'E' : delta > 0 ? '+' + delta : String(delta);
-  document.getElementById('recoveryProgress').textContent = savedHoleStats.size + ' holes completed' + (savedHoleStats.size ? ' · ' + total + ' strokes (' + relative + ')' : '');
-  document.getElementById('recoveryCurrentHole').textContent = 'Ready to resume Hole ' + activeHoleNumber;
+  // Presentation only: keep stroke counts neutral and color only the to-par value.
+  const recoveryProgress = document.getElementById('recoveryProgress');
+  const progressText = document.createTextNode(savedHoleStats.size + ' holes completed' + (savedHoleStats.size ? ' · ' + total + ' strokes (' : ''));
+  recoveryProgress.replaceChildren(progressText);
+  if (savedHoleStats.size) {
+    const relativeValue = document.createElement('span');
+    relativeValue.className = 'recovery-to-par-value ' + (delta < 0 ? 'is-under-par' : delta > 0 ? 'is-over-par' : 'is-even-par');
+    relativeValue.textContent = relative;
+    recoveryProgress.append(relativeValue, document.createTextNode(')'));
+  }
+  const completed = isRoundCompletedForReview();
+  const recoveryTitle = roundRecoveryScreen.querySelector('.setup-title');
+  if (recoveryTitle) recoveryTitle.textContent = completed ? 'Your Completed Round' : 'Your Active Round';
+  const recoveryAlert = roundRecoveryScreen.querySelector('.recovery-alert');
+  if (recoveryAlert) {
+    const secondLine = completed ? 'your completed round!' : 'your round in progress!';
+    const firstLine = document.createElement('span');
+    firstLine.className = 'recovery-alert-first';
+    firstLine.textContent = 'We found';
+    const animatedLine = document.createElement('span');
+    animatedLine.className = 'recovery-alert-second';
+    Array.from(secondLine).forEach((character, index, characters) => {
+      const letter = document.createElement('span');
+      letter.className = character === ' ' ? 'recovery-letter recovery-space' : 'recovery-letter';
+      letter.textContent = character === ' ' ? '\u00a0' : character;
+      const fraction = characters.length > 1 ? index / (characters.length - 1) : 1;
+      const offset = 1650 * (2 * fraction - fraction * fraction);
+      letter.style.setProperty('--recovery-letter-delay', `${Math.round(650 + offset)}ms`);
+      letter.setAttribute('aria-hidden', 'true');
+      animatedLine.appendChild(letter);
+    });
+    recoveryAlert.setAttribute('aria-label', `We found ${secondLine}`);
+    recoveryAlert.replaceChildren(firstLine, animatedLine);
+  }
+  document.getElementById('recoveryCurrentHole').textContent = completed
+    ? 'Your scores are saved. Return to review the round or visit the Clubhouse.'
+    : 'Ready to resume Hole ' + activeHoleNumber;
+  recoveryResumeBtn.textContent = completed ? 'RETURN TO ROUND »»' : 'RESUME ACTIVE ROUND »»';
   homeScreen.hidden = true;
   homeDestinationScreen.hidden = true;
   roundSetupScreen.hidden = true;
@@ -1931,6 +2011,10 @@ function clearActiveRoundAndStartSetup() {
   activeHoleNumber = null;
   roundHoleOrder = [];
   roundStartingHole = null;
+  roundCompleteAcknowledged = false;
+  updateCompletedRoundActions();
+  updateHomeRoundButton();
+  turnShownThisRound = false;
   returnHoleAfterEdit = null;
   holeStatDrafts.clear();
   savedHoleStats.clear();
@@ -1984,7 +2068,9 @@ function maybeShowAtTurn() {
   const score = entries.reduce((sum, item) => sum + item.stats.score, 0);
   const parKnown = entries.every(item => item.par !== null);
   const toPar = parKnown ? entries.reduce((sum, item) => sum + item.stats.score - item.par, 0) : null;
-  document.getElementById('turnScore').textContent = toPar === null ? String(score) + ' STROKES' : formatToPar(toPar);
+  const turnScoreEl = document.getElementById('turnScore');
+  turnScoreEl.textContent = toPar === null ? String(score) + ' STROKES' : formatToPar(toPar);
+  applyParScoreColor(turnScoreEl, toPar);
   const gir = entries.filter(item => item.stats.gir === 'Y').length;
   const puttEntries = entries.filter(item => Number.isInteger(item.stats.putts));
   const avgPutts = puttEntries.length === 9 ? (puttEntries.reduce((sum, item) => sum + item.stats.putts, 0) / 9) : null;
@@ -2036,6 +2122,77 @@ document.getElementById('turnContinue').addEventListener('click', () => {
   persistActiveRound();
 });
 
+// Shared scoring color rule: under par red, even green, over par charcoal.
+function applyParScoreColor(element, toPar) {
+  element.classList.toggle('score-under-par', toPar !== null && toPar < 0);
+  element.classList.toggle('score-even-par', toPar === 0);
+  element.classList.toggle('score-over-par', toPar !== null && toPar > 0);
+}
+// A completed scorecard remains editable, with an obvious route to Clubhouse.
+function updateCompletedRoundActions() {
+  const completed = isRoundCompletedForReview();
+  for (const id of ['completedRoundClubhouseBtn', 'homeCompletedClubhouseBtn']) {
+    const button = document.getElementById(id);
+    if (button) button.hidden = !completed;
+  }
+  document.getElementById('holeCourseStrip')?.classList.toggle('is-round-complete', completed);
+  const subline = document.getElementById('holeCourseSubline');
+  if (subline) subline.hidden = completed;
+}
+for (const id of ['completedRoundClubhouseBtn', 'homeCompletedClubhouseBtn']) {
+  document.getElementById(id)?.addEventListener('click', () => {
+    persistActiveRound();
+    showHomeDestination('clubhouse');
+  });
+}
+const roundCompleteOverlay = document.getElementById('roundCompleteOverlay');
+function isScoringComplete() {
+  return roundInProgress && roundHoleOrder.length > 0 &&
+    roundHoleOrder.every(hole => savedHoleStats.has(hole));
+}
+function maybeShowRoundComplete() {
+  if (roundCompleteAcknowledged || !isScoringComplete()) return;
+  roundCompleteAcknowledged = true;
+  updateCompletedRoundActions();
+  updateHomeRoundButton();
+  const score = roundHoleOrder.reduce((sum, hole) => sum + Number(savedHoleStats.get(hole).score || 0), 0);
+  const pars = roundHoleOrder.map(hole => holeParForNumber(hole));
+  const toPar = pars.every(par => par !== null) ? score - pars.reduce((sum, par) => sum + par, 0) : null;
+  // Identify the configured round length on the completion billboard.
+  const roundLengthLabel = roundCompleteOverlay.querySelector('.turn-card .turn-eyebrow');
+  if (roundLengthLabel) {
+    roundLengthLabel.textContent = roundHoleOrder.length === 9
+      ? 'YOUR NINE-HOLE ROUND'
+      : roundHoleOrder.length === 18
+        ? 'YOUR EIGHTEEN-HOLE ROUND'
+        : `YOUR ${roundHoleOrder.length}-HOLE ROUND`;
+  }
+  const completeScoreEl = document.getElementById('roundCompleteScore');
+  completeScoreEl.textContent = toPar === null ? `${score} STROKES` : `${score} · ${formatToPar(toPar)}`;
+  applyParScoreColor(completeScoreEl, toPar);
+  persistActiveRound();
+  setScorebarOpen(false);
+  bottomNav.hidden = false;
+  bottomNav.inert = true;
+  roundCompleteOverlay.hidden = false;
+  roundCompleteOverlay.classList.remove('turn-visible');
+  requestAnimationFrame(() => requestAnimationFrame(() => roundCompleteOverlay.classList.add('turn-visible')));
+}
+function dismissRoundComplete() {
+  roundCompleteOverlay.classList.remove('turn-visible');
+  roundCompleteOverlay.hidden = true;
+  bottomNav.inert = false;
+  persistActiveRound();
+}
+document.getElementById('roundCompleteClubhouse').addEventListener('click', () => {
+  dismissRoundComplete();
+  showHomeDestination('clubhouse');
+});
+document.getElementById('roundCompleteLater').addEventListener('click', () => {
+  dismissRoundComplete();
+  showHome();
+});
+
 const LOCAL_ROUND_KEY = 'stracker:p3:active-round:v1';
 let restoringLocalRound = false;
 function persistActiveRound() {
@@ -2048,7 +2205,7 @@ function persistActiveRound() {
         length: roundLengthSelect.value, start: startingHoleSelect.value },
       order: roundHoleOrder, startingHole: roundStartingHole,
       currentHole: activeHoleNumber, returnHole: returnHoleAfterEdit,
-      turnShown: turnShownThisRound,
+      turnShown: turnShownThisRound, completeAcknowledged: roundCompleteAcknowledged,
       drafts: [...holeStatDrafts.entries()], saved: [...savedHoleStats.entries()],
       confirmedRows: [...courseDataConfirmedRows],
       view: !holeStatsScreen.hidden ? 'holeStats' : !courseDataScreen.hidden ? 'courseData' :
@@ -2106,8 +2263,10 @@ function recoverActiveRound() {
     activeHoleNumber = roundHoleOrder.includes(snapshot.currentHole) ? snapshot.currentHole : roundHoleOrder[0];
     returnHoleAfterEdit = snapshot.returnHole ?? null;
     turnShownThisRound = Boolean(snapshot.turnShown);
+    roundCompleteAcknowledged = Boolean(snapshot.completeAcknowledged);
     roundInProgress = true;
     editingActiveRoundSetup = false;
+    updateCompletedRoundActions();
     updateHomeRoundButton();
     // Present a choice on a fresh launch; never interrupt normal navigation.
     showRoundRecovery();
@@ -2177,13 +2336,14 @@ globalMenuPanel.querySelectorAll('[data-global-dest]').forEach(button => button.
 // Hide the global control during the modal recovery choice or AT THE TURN.
 function syncGlobalMenuVisibility() {
   const hidden = scorebarPanel.classList.contains('is-open') ||
-    !roundRecoveryScreen.hidden || !atTurnOverlay.hidden ||
+    !roundRecoveryScreen.hidden || !atTurnOverlay.hidden || !roundCompleteOverlay.hidden ||
     !turnSettingsOverlay.hidden || !newRoundConfirm.hidden;
   globalMenuBtn.hidden = hidden;
   if (hidden) closeGlobalMenu();
 }
 new MutationObserver(syncGlobalMenuVisibility).observe(roundRecoveryScreen,{attributes:true,attributeFilter:['hidden']});
 new MutationObserver(syncGlobalMenuVisibility).observe(atTurnOverlay,{attributes:true,attributeFilter:['hidden']});
+new MutationObserver(syncGlobalMenuVisibility).observe(roundCompleteOverlay,{attributes:true,attributeFilter:['hidden']});
 new MutationObserver(syncGlobalMenuVisibility).observe(turnSettingsOverlay,{attributes:true,attributeFilter:['hidden']});
 new MutationObserver(syncGlobalMenuVisibility).observe(newRoundConfirm,{attributes:true,attributeFilter:['hidden']});
 syncGlobalMenuVisibility();
