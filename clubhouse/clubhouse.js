@@ -30,7 +30,8 @@ function renderClubhousePreview(context) {
     if (id === 'clubhouseToPar' && scoreClass) metric.classList.add(scoreClass);
   });
   const expected = roundHoleOrder.length || Number(roundLengthSelect.value) || 0;
-  const missingScores = roundHoleOrder.filter(hole => !savedHoleStats.has(hole));
+  const validScore = stat => Number.isInteger(stat?.score) && stat.score > 0;
+   const missingScores = roundHoleOrder.filter(hole => !validScore(savedHoleStats.get(hole)));
   const missingPars = saved.filter(([hole]) => holeParForNumber(hole) === null);
   const checks = [];
   if (!roundInProgress) checks.push('No active round to review.');
@@ -39,6 +40,30 @@ function renderClubhousePreview(context) {
     if (missingScores.length) checks.push(`Unsaved holes: ${missingScores.join(', ')}.`);
     if (missingPars.length) checks.push(`Par unavailable for ${missingPars.length} saved hole(s).`);
     if (!missingScores.length && !missingPars.length) checks.push('All expected scores and hole pars are present.');
+    // Stage 1: identify missing performance information without changing round data.
+    // A genuine zero is known; null/undefined are unknown. Par-3 FIR is N/A.
+    const details = [];
+    for (const hole of roundHoleOrder) {
+      const stat = savedHoleStats.get(hole);
+      if (!validScore(stat)) continue;
+      const par = holeParForNumber(hole);
+      const missing = [];
+      if (stat.putts == null || !Number.isInteger(stat.putts) || stat.putts < 0) missing.push('Putts');
+      if (stat.gir !== 'Y' && stat.gir !== 'N') missing.push('GIR');
+      if (par === 4 || par === 5) {
+        if (stat.fir !== 'Y' && stat.fir !== 'N') missing.push('FIR');
+      }
+      // Up-and-down applicability cannot be established reliably from these
+      // fields alone, so do not flag it as missing at this stage.
+      if (missing.length) details.push(`Hole ${hole}: ${missing.join(', ')}.`);
+    }
+    if (details.length) {
+      checks.push(`Performance details to review on ${details.length} hole${details.length === 1 ? '' : 's'} (optional):`);
+      checks.push(...details);
+      checks.push('Your scores are preserved. Completing these details can improve your performance insights.');
+    } else if (saved.length) {
+      checks.push('No missing putts, GIR, or applicable FIR on scored holes.');
+    }
   }
   const container = document.getElementById('clubhouseReviewItems');
   container.replaceChildren();
