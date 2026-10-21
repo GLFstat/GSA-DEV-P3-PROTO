@@ -1,6 +1,6 @@
 /* Stracker Phase 3 offline app shell — scoped to this GitHub Pages project.
    No localStorage, round data, or remote API responses are modified. */
-const CACHE = 'stracker-p3-shell-20261021-2';
+const CACHE = 'stracker-p3-shell-20261021-3';
 const REQUIRED = ['./', './index.html', './home.css', './clubhouse/clubhouse.css', './clubhouse/clubhouse.js', './js/home.js'];
 const OPTIONAL = ['./manifest.json', './images/-1-Logo+tag.png', './images/Home-Hdr-BG.png', './images/score-strip-hole.png'];
 
@@ -26,7 +26,17 @@ self.addEventListener('fetch', event => {
   const scope = new URL(self.registration.scope);
   if (url.origin !== scope.origin || !url.pathname.startsWith(scope.pathname)) return;
   if (request.mode === 'navigate') {
+    // Launch from the installed shell first. Avoid a network probe on
+    // offline iOS Home Screen launches; versioned SW installs refresh it.
     event.respondWith((async () => {
+      const shell = await caches.match(new URL('./index.html', scope));
+      if (shell) return shell;
+      try { return await fetch(request); }
+      catch (_) { return Response.error(); }
+    })());
+    return;
+  }
+  event.respondWith((async () => {
       try {
         const response = await fetch(request);
         if (response.ok) {
