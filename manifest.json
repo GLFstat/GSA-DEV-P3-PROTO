@@ -1,0 +1,10 @@
+{
+  "name": "Stracker \u2014 Golf Stats Tracking System",
+  "short_name": "Stracker",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#2f2f2f",
+  "orientation": "portrait"
+}

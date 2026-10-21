@@ -13,6 +13,7 @@
     content="black"
   >
   <title>MyGolfStats – P3 Prototype</title>
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="home.css">
   <link rel="stylesheet" href="clubhouse/clubhouse.css">
 </head>
@@ -227,7 +228,7 @@
           </div>
           <div id="clubhousePreview" class="clubhouse-preview" hidden>
             <h1 class="clubhouse-main-heading">CLUBHOUSE</h1>
-            <p class="clubhouse-lead">Let's review, before this one's in the books.</p>
+            <p class="clubhouse-lead">Let's review, before it goes in the books.</p>
             <div class="clubhouse-round-card">
               <h2 id="clubhouseCourseName">No active round</h2>
               <p id="clubhouseRoundInfo"></p>
@@ -803,5 +804,15 @@
   ></div>
   <script src="clubhouse/clubhouse.js"></script>
   <script src="js/home.js"></script>
+  <script>
+    // Offline app-shell caching; scoring data stays in existing local storage.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.warn('Stracker offline caching unavailable:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
