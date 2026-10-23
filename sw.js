@@ -1,7 +1,7 @@
 /* Stracker Phase 3 offline shell — network-first with offline fallback.
    This worker caches app files only. It never deletes round data in localStorage/IndexedDB. */
-const CACHE = 'stracker-p3-shell-20261023-6';
-const RELEASE = '20261023-6';
+const CACHE = 'stracker-p3-shell-20261023-7';
+const RELEASE = '20261023-7';
 const REQUIRED = ['./index.html', './home.css', './clubhouse/clubhouse.css', './clubhouse/clubhouse.js', './js/home.js'];
 const OPTIONAL = ['./manifest.json', './images/-1-Logo+tag.png', './images/Home-Hdr-BG.png', './images/score-strip-hole.png'];
 const shellURL = new URL('./index.html', self.registration.scope).href;

@@ -3350,3 +3350,40 @@ html, body, .app, .screen, .setup-content, .destination-content, .hole-body {
   line-height: 1.2;
   white-space: nowrap;
 }
+
+/* Hole saved acknowledgement: visual only; never blocks scoring controls. */
+body > .hole-saved-confirmation {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+body > .hole-saved-confirmation .hole-saved-confirmation-card {
+  width: min(68vw, 260px);
+  min-height: 155px;
+  border-radius: 16px;
+  background: #00450e;
+  color: #5ab64d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font: 900 clamp(43px, 12vw, 58px)/1.02 Arial, sans-serif;
+  letter-spacing: -1px;
+  text-align: center;
+}
+body > .hole-saved-confirmation.is-visible {
+  visibility: visible;
+  animation: holeSavedFlash 660ms ease-in-out both;
+}
+@keyframes holeSavedFlash {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  55% { opacity: 1; }
+  100% { opacity: 0; }
+}

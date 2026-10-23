@@ -808,7 +808,7 @@
     // Version-aware PWA updates. Never reload while a local round exists.
     // Opening / foregrounding Stracker checks once; there is no background polling.
     (() => {
-      const PAGE_RELEASE = '20261023-6';
+      const PAGE_RELEASE = '20261023-7';
       const ACTIVE_ROUND_KEY = 'stracker:p3:active-round:v1';
       let registration = null;
       let updateInFlight = false;
@@ -926,6 +926,38 @@
         if (event.persisted) checkForUpdate();
       });
     })();
+  </script>
+
+  <script>
+  // Open with ?stracker_diag=1 for a read-only release and service-worker report.
+  if (new URLSearchParams(location.search).has('stracker_diag')) {
+    const panel = document.createElement('section');
+    panel.style.cssText = 'position:fixed;left:8px;right:8px;top:8px;z-index:2147483646;background:#fff;color:#111;padding:15px;border:2px solid #00a249;border-radius:10px;font:13px/1.5 monospace;white-space:pre-wrap;box-shadow:0 8px 25px #0005;';
+    const report = document.createElement('div');
+    const close = document.createElement('button');
+    close.textContent = 'CLOSE DIAGNOSTIC';
+    close.style.cssText = 'margin-top:10px;padding:8px;background:#00a249;color:white;border:0;border-radius:6px;';
+    close.onclick = () => panel.remove();
+    panel.append(report, close);
+    document.body.append(panel);
+    (async () => {
+      const info = ['Page: 20261023-7', 'Home JS: ' + (window.STRACKER_HOME_JS_RELEASE || 'not loaded')];
+      if (!('serviceWorker' in navigator)) { info.push('Service worker: unavailable'); report.textContent = info.join('\n'); return; }
+      const reg = await navigator.serviceWorker.getRegistration();
+      info.push('Controller: ' + (navigator.serviceWorker.controller ? 'yes' : 'no'));
+      for (const [name, worker] of [['Active',reg?.active],['Waiting',reg?.waiting]]) {
+        if (!worker) { info.push(name + ': none'); continue; }
+        const reply = await new Promise(resolve => {
+          const channel = new MessageChannel();
+          const timeout = setTimeout(() => resolve('no reply'), 1200);
+          channel.port1.onmessage = e => { clearTimeout(timeout); resolve(e.data?.release || 'unknown'); };
+          worker.postMessage({type:'STRACKER_VERSION'},[channel.port2]);
+        });
+        info.push(name + ': ' + reply);
+      }
+      report.textContent = info.join('\n');
+    })().catch(e => report.textContent = 'Diagnostic unavailable: ' + e.message);
+  }
   </script>
 </body>
 </html>

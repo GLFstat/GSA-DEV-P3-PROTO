@@ -1,5 +1,5 @@
 // Diagnostic release marker; no scoring logic changed.
-window.STRACKER_HOME_JS_RELEASE = '20261023-6';
+window.STRACKER_HOME_JS_RELEASE = '20261023-7';
 const API_BASE = 'https://api.opengolfapi.org/api/v1';
 /* Phase 3 account hook — current prototype is competitive. */
 const ACCOUNT_TYPE = 'competitive';
@@ -1726,7 +1726,7 @@ function showHoleSavedConfirmation(hole) {
     overlay.setAttribute('role', 'status');
     overlay.setAttribute('aria-live', 'polite');
     overlay.innerHTML = '<div class="hole-saved-confirmation-card"><span>HOLE</span><span>SAVED</span></div>';
-    document.querySelector('.app').appendChild(overlay);
+    document.body.appendChild(overlay);
   }
   clearTimeout(holeSavedTimer);
   overlay.classList.remove('is-visible');
@@ -2259,11 +2259,12 @@ const LOCAL_ROUND_PREVIOUS_KEY = 'stracker:p3:active-round:previous:v1';
 // Prevent an older tab's visibility/pagehide handler from replacing newer scores.
 let lastKnownRoundRaw = null;
 let roundStorageConflictShown = false;
+let lastConflictSource = 'unknown';
 let restoringLocalRound = false;
 function warnRoundStorageConflict() {
   if (roundStorageConflictShown) return;
   roundStorageConflictShown = true;
-  console.error('Circle-1: another tab changed the saved round. This tab will not overwrite it.');
+  console.error('Circle-1: saved-round mismatch; refusing overwrite. Trigger:', lastConflictSource);
   // A transient toast is too easy to miss when a scoring update is refused.
   // Build a self-contained dialog so no HTML/CSS changes are required.
   let dialog = document.getElementById('roundStorageConflictDialog');
@@ -2291,10 +2292,15 @@ function warnRoundStorageConflict() {
     reload.textContent = 'RELOAD SAVED ROUND »»';
     reload.style.cssText = 'width:100%;padding:14px 12px;background:#00a249;color:#fff;border:0;border-radius:9px;font:700 15px Arial,sans-serif;cursor:pointer;';
     reload.addEventListener('click', () => window.location.reload());
-    panel.append(title, explanation, instruction, reload);
+    const diagnostic = document.createElement('p');
+    diagnostic.id = 'roundStorageConflictSource';
+    diagnostic.style.cssText = 'font:12px/1.4 monospace;color:#555;overflow-wrap:anywhere;margin:0 0 16px;';
+    panel.append(title, explanation, instruction, diagnostic, reload);
     dialog.appendChild(panel);
     document.body.appendChild(dialog);
   }
+  const source = dialog.querySelector('#roundStorageConflictSource');
+  if (source) source.textContent = 'Diagnostic trigger: ' + lastConflictSource;
   dialog.hidden = false;
   dialog.style.display = 'flex';
   dialog.querySelector('button')?.focus();
@@ -2308,6 +2314,7 @@ function canSaveHoleFromThisTab(hole) {
     // Every write must be based on the exact snapshot this tab last saved/read.
     // No score-based exceptions: those allowed a stale tab to replace a score.
     if (localStorage.getItem(LOCAL_ROUND_KEY) !== lastKnownRoundRaw) {
+      lastConflictSource = 'SAVE HOLE preflight, hole ' + hole;
       warnRoundStorageConflict();
       return false;
     }
@@ -2339,6 +2346,7 @@ function persistActiveRound() {
     // Strict optimistic concurrency: never merge stale snapshots automatically.
     // In particular, a stale tab must not overwrite an already-scored hole.
     if (currentRaw !== lastKnownRoundRaw) {
+      lastConflictSource = (new Error().stack || '').split('\n').slice(2,5).map(line => line.trim()).join(' | ') || 'background persistence';
       warnRoundStorageConflict();
       return false;
     }
