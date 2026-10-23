@@ -1713,6 +1713,27 @@ function renderSampleScorebar() {
     rows.appendChild(row);
   }
 }
+// Reusable local-save acknowledgement; never indicates cloud synchronization.
+let holeSavedTimer;
+function showHoleSavedConfirmation(hole) {
+  let overlay = document.getElementById('holeSavedConfirmation');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'holeSavedConfirmation';
+    overlay.className = 'hole-saved-confirmation';
+    overlay.setAttribute('role', 'status');
+    overlay.setAttribute('aria-live', 'polite');
+    overlay.innerHTML = '<div class="hole-saved-confirmation-card"><span>HOLE</span><span>SAVED</span></div>';
+    document.querySelector('.app').appendChild(overlay);
+  }
+  clearTimeout(holeSavedTimer);
+  overlay.classList.remove('is-visible');
+  // Restart the animation for consecutive saves without delaying navigation.
+  void overlay.offsetWidth;
+  overlay.setAttribute('aria-label', `Hole ${hole} saved on this device`);
+  overlay.classList.add('is-visible');
+  holeSavedTimer = setTimeout(() => overlay.classList.remove('is-visible'), 660);
+}
 document.querySelector('.hole-demo-save').addEventListener('click', () => {
   const hole = getCurrentDemoHoleNumber();
   const draft = currentHoleDraft();
@@ -1721,8 +1742,21 @@ document.querySelector('.hole-demo-save').addEventListener('click', () => {
     showToast('Enter a valid hole score first');
     return;
   }
+  // Refuse to score from a stale tab BEFORE changing memory or navigating.
+  // The other tab's completed hole is authoritative until this tab reloads.
+  if (!canSaveHoleFromThisTab(hole)) {
+    return;
+  }
   const wasSaved = savedHoleStats.has(hole);
+  const previousStat = savedHoleStats.get(hole);
   savedHoleStats.set(hole, {...draft});
+  // A scored hole must reach durable storage BEFORE advancing the interface.
+  if (!persistActiveRound()) {
+    if (wasSaved) savedHoleStats.set(hole, previousStat);
+    else savedHoleStats.delete(hole);
+    showToast('Hole not saved — check other open tabs');
+    return;
+  }
   const currentIndex = roundHoleOrder.indexOf(hole);
   const returnIndex = roundHoleOrder.indexOf(returnHoleAfterEdit);
   const destinationIndex = wasSaved && returnIndex > currentIndex
@@ -1736,7 +1770,11 @@ document.querySelector('.hole-demo-save').addEventListener('click', () => {
     showToast(`Hole ${hole} saved — last hole in round`);
   }
   renderSampleScorebar();
+  // Progress metadata is secondary: the scored hole is already safely stored.
   persistActiveRound();
+  // The Round Complete billboard provides its own save confirmation.
+  // Keep HOLE SAVED for interim holes and later edits to an acknowledged completed round.
+  if (!isScoringComplete() || roundCompleteAcknowledged) showHoleSavedConfirmation(hole);
   maybeShowAtTurn();
   maybeShowRoundComplete();
 });
@@ -2004,7 +2042,16 @@ recoveryNewBtn.addEventListener('click', () => {
 
 function clearActiveRoundAndStartSetup() {
   // Confirmed: clear local round and all active-round state before setup.
-  try { localStorage.removeItem(LOCAL_ROUND_KEY); }
+  try {
+    const existing = localStorage.getItem(LOCAL_ROUND_KEY);
+    if (existing !== lastKnownRoundRaw) {
+      warnRoundStorageConflict();
+      return;
+    }
+    if (existing) localStorage.setItem(LOCAL_ROUND_BACKUP_KEY, existing);
+    localStorage.removeItem(LOCAL_ROUND_KEY);
+    lastKnownRoundRaw = null;
+  }
   catch (error) { console.error('Unable to clear saved round:', error); showToast('Unable to clear saved round'); return; }
   roundInProgress = false;
   editingActiveRoundSetup = false;
@@ -2152,6 +2199,10 @@ function isScoringComplete() {
 }
 function maybeShowRoundComplete() {
   if (roundCompleteAcknowledged || !isScoringComplete()) return;
+  if (!persistActiveRound()) {
+    showToast('Round not safely stored — check other open tabs');
+    return;
+  }
   roundCompleteAcknowledged = true;
   updateCompletedRoundActions();
   updateHomeRoundButton();
@@ -2170,7 +2221,13 @@ function maybeShowRoundComplete() {
   const completeScoreEl = document.getElementById('roundCompleteScore');
   completeScoreEl.textContent = toPar === null ? `${score} STROKES` : `${score} · ${formatToPar(toPar)}`;
   applyParScoreColor(completeScoreEl, toPar);
-  persistActiveRound();
+  if (!persistActiveRound()) {
+    roundCompleteAcknowledged = false;
+    updateCompletedRoundActions();
+    updateHomeRoundButton();
+    showToast('Round not safely stored — check other open tabs');
+    return;
+  }
   setScorebarOpen(false);
   bottomNav.hidden = false;
   bottomNav.inert = true;
@@ -2194,9 +2251,74 @@ document.getElementById('roundCompleteLater').addEventListener('click', () => {
 });
 
 const LOCAL_ROUND_KEY = 'stracker:p3:active-round:v1';
+const LOCAL_ROUND_BACKUP_KEY = 'stracker:p3:active-round:backup:v1';
+const LOCAL_ROUND_PREVIOUS_KEY = 'stracker:p3:active-round:previous:v1';
+// This tab may write only while the stored record is the one it last read/wrote.
+// Prevent an older tab's visibility/pagehide handler from replacing newer scores.
+let lastKnownRoundRaw = null;
+let roundStorageConflictShown = false;
 let restoringLocalRound = false;
+function warnRoundStorageConflict() {
+  if (roundStorageConflictShown) return;
+  roundStorageConflictShown = true;
+  console.error('Circle-1: another tab changed the saved round. This tab will not overwrite it.');
+  // A transient toast is too easy to miss when a scoring update is refused.
+  // Build a self-contained dialog so no HTML/CSS changes are required.
+  let dialog = document.getElementById('roundStorageConflictDialog');
+  if (!dialog) {
+    dialog = document.createElement('div');
+    dialog.id = 'roundStorageConflictDialog';
+    dialog.setAttribute('role', 'alertdialog');
+    dialog.setAttribute('aria-modal', 'true');
+    dialog.setAttribute('aria-labelledby', 'roundStorageConflictTitle');
+    dialog.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px;';
+    const panel = document.createElement('div');
+    panel.style.cssText = 'width:min(100%,420px);background:#fff;color:#17241b;border-radius:16px;padding:24px;font:16px/1.45 Arial,sans-serif;box-shadow:0 12px 48px rgba(0,0,0,.35);';
+    const title = document.createElement('h2');
+    title.id = 'roundStorageConflictTitle';
+    title.textContent = 'Round updated in another tab';
+    title.style.cssText = 'font-size:22px;line-height:1.2;margin:0 0 14px;';
+    const explanation = document.createElement('p');
+    explanation.textContent = 'This tab is out of date. Your changes in this tab were NOT saved. To protect the latest saved scores, Stracker has stopped this tab from saving.';
+    explanation.style.cssText = 'margin:0 0 12px;';
+    const instruction = document.createElement('p');
+    instruction.textContent = 'Reload the latest saved round to continue. Any unsaved changes shown in this tab will be discarded.';
+    instruction.style.cssText = 'margin:0 0 20px;';
+    const reload = document.createElement('button');
+    reload.type = 'button';
+    reload.textContent = 'RELOAD SAVED ROUND »»';
+    reload.style.cssText = 'width:100%;padding:14px 12px;background:#00a249;color:#fff;border:0;border-radius:9px;font:700 15px Arial,sans-serif;cursor:pointer;';
+    reload.addEventListener('click', () => window.location.reload());
+    panel.append(title, explanation, instruction, reload);
+    dialog.appendChild(panel);
+    document.body.appendChild(dialog);
+  }
+  dialog.hidden = false;
+  dialog.style.display = 'flex';
+  dialog.querySelector('button')?.focus();
+}
+function roundSavedSignature(snapshot) {
+  return JSON.stringify(snapshot.saved || []);
+}
+
+function canSaveHoleFromThisTab(hole) {
+  try {
+    // Every write must be based on the exact snapshot this tab last saved/read.
+    // No score-based exceptions: those allowed a stale tab to replace a score.
+    if (localStorage.getItem(LOCAL_ROUND_KEY) !== lastKnownRoundRaw) {
+      warnRoundStorageConflict();
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.warn('Circle-1: could not verify the saved hole:', error);
+    showToast('Cannot verify round storage — save blocked');
+    return false;
+  }
+}
+
 function persistActiveRound() {
-  if (restoringLocalRound || !roundInProgress) return;
+  if (restoringLocalRound || !roundInProgress) return false;
   try {
     const snapshot = {
       version: 1, savedAt: Date.now(),
@@ -2211,16 +2333,39 @@ function persistActiveRound() {
       view: !holeStatsScreen.hidden ? 'holeStats' : !courseDataScreen.hidden ? 'courseData' :
         !roundSetupScreen.hidden ? 'setup' : 'home'
     };
-    localStorage.setItem(LOCAL_ROUND_KEY, JSON.stringify(snapshot));
+    const currentRaw = localStorage.getItem(LOCAL_ROUND_KEY);
+    // Strict optimistic concurrency: never merge stale snapshots automatically.
+    // In particular, a stale tab must not overwrite an already-scored hole.
+    if (currentRaw !== lastKnownRoundRaw) {
+      warnRoundStorageConflict();
+      return false;
+    }
+    const newRaw = JSON.stringify(snapshot);
+    if (currentRaw) {
+      const previous = JSON.parse(currentRaw);
+      // Preserve the last distinct scored-hole state before overwriting it.
+      // The backup is written FIRST; if that fails, do not risk the only copy.
+      if (roundSavedSignature(previous) !== roundSavedSignature(snapshot)) {
+        const oldBackup = localStorage.getItem(LOCAL_ROUND_BACKUP_KEY);
+        if (oldBackup) localStorage.setItem(LOCAL_ROUND_PREVIOUS_KEY, oldBackup);
+        localStorage.setItem(LOCAL_ROUND_BACKUP_KEY, currentRaw);
+      }
+    }
+    localStorage.setItem(LOCAL_ROUND_KEY, newRaw);
+    lastKnownRoundRaw = newRaw;
+    roundStorageConflictShown = false;
+    return true;
   } catch (error) {
     console.warn('Stracker local round save unavailable:', error);
     showToast('Device storage unavailable — round not backed up');
+    return false;
   }
 }
 function recoverActiveRound() {
   let snapshot;
   try {
     const raw = localStorage.getItem(LOCAL_ROUND_KEY);
+    lastKnownRoundRaw = raw;
     if (!raw) return;
     snapshot = JSON.parse(raw);
     if (snapshot.version !== 1 || !Array.isArray(snapshot.order) || !snapshot.order.length ||
