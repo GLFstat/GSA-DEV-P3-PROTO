@@ -805,14 +805,127 @@
   <script src="clubhouse/clubhouse.js"></script>
   <script src="js/home.js"></script>
   <script>
-    // Offline app-shell caching; scoring data stays in existing local storage.
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => {
-          console.warn('Stracker offline caching unavailable:', err);
-        });
+    // Version-aware PWA updates. Never reload while a local round exists.
+    // Opening / foregrounding Stracker checks once; there is no background polling.
+    (() => {
+      const PAGE_RELEASE = '20261023-6';
+      const ACTIVE_ROUND_KEY = 'stracker:p3:active-round:v1';
+      let registration = null;
+      let updateInFlight = false;
+      let refreshing = false;
+      let approvedUpdate = false;
+      let approvedRoundSnapshot = null;
+      let updateButton = null;
+      // An update is offered only on the launch-time recovery screen, never
+      // during active scoring. A click is required to restart an editable round.
+      function showPendingUpdate() {
+        const recovery = document.getElementById('roundRecoveryScreen');
+        const card = recovery?.querySelector('.recovery-card');
+        if (!card || !registration?.waiting || !hasLocalRound()) return;
+        if (!updateButton) {
+          updateButton = document.createElement('button');
+          updateButton.type = 'button';
+          updateButton.textContent = 'INSTALL READY UPDATE »»';
+          updateButton.style.cssText = 'display:block;width:100%;margin-top:14px;padding:13px;background:#2f2f2f;color:white;border:0;border-radius:8px;font:700 16px Arial,sans-serif;cursor:pointer';
+          updateButton.addEventListener('click', () => {
+            // Never force an update if the recovery screen has been left.
+            if (recovery.hidden || !registration?.waiting) return;
+            let raw;
+            try {
+              raw = localStorage.getItem(ACTIVE_ROUND_KEY);
+              const snapshot = JSON.parse(raw);
+              if (!snapshot || snapshot.version !== 1 || !Array.isArray(snapshot.saved) ||
+                  !Array.isArray(snapshot.order) || !snapshot.order.length) throw Error('invalid saved round');
+            } catch (error) {
+              report('update-blocked-unverified-round', { message: String(error) });
+              return;
+            }
+            approvedRoundSnapshot = raw;
+            approvedUpdate = true;
+            updateButton.disabled = true;
+            updateButton.textContent = 'UPDATING — PLEASE WAIT';
+            registration.waiting.postMessage({ type: 'STRACKER_ACTIVATE_WHEN_SAFE' });
+          });
+          card.appendChild(updateButton);
+        }
+        updateButton.hidden = false;
+        report('update-ready-recovery-screen');
+      }
+      // A completed round may still be open for corrections; keep it protected
+      // until all controlled app windows close. Do not force a reload.
+      const localRoundStatus = () => {
+        try {
+          const raw = localStorage.getItem(ACTIVE_ROUND_KEY);
+          if (!raw) return 'none';
+          const round = JSON.parse(raw);
+          return round.completeAcknowledged ? 'completed-review' : 'unfinished';
+        } catch (_) { return 'unknown-protected'; }
+      };
+      const hasLocalRound = () => localRoundStatus() !== 'none';
+      const report = (state, extra = {}) => {
+        window.strackerUpdateStatus = { state, ...extra };
+        console.info('[Stracker update]', window.strackerVersionInfo());
+      };
+      // Read live globals on every invocation, never a snapshot taken at registration.
+      window.strackerVersionInfo = () => ({
+        pageRelease: PAGE_RELEASE,
+        homeJsRelease: window.STRACKER_HOME_JS_RELEASE || 'unknown',
+        state: window.strackerUpdateStatus?.state || 'initializing',
+        localRoundStatus: localRoundStatus(),
+        activeRoundProtected: hasLocalRound(),
+        controller: navigator.serviceWorker?.controller?.scriptURL || null,
+        waiting: !!registration?.waiting
       });
-    }
+      if (!('serviceWorker' in navigator)) { report('unsupported'); return; }
+
+      function maybeActivateWaiting() {
+        if (!registration?.waiting) return;
+        if (hasLocalRound()) { showPendingUpdate(); report('waiting-for-round-safe-restart'); return; }
+        report('activating-safe-update');
+        registration.waiting.postMessage({ type: 'STRACKER_ACTIVATE_WHEN_SAFE' });
+      }
+      async function checkForUpdate() {
+        if (!registration || updateInFlight || !navigator.onLine) return;
+        updateInFlight = true;
+        try { await registration.update(); maybeActivateWaiting(); }
+        catch (err) { report('update-check-unavailable', { message: String(err) }); }
+        finally { updateInFlight = false; }
+      }
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (hasLocalRound()) {
+          if (!approvedUpdate) { report('new-controller-round-protected'); return; }
+          // Confirm the stored round has not changed since the user approved.
+          try {
+            if (localStorage.getItem(ACTIVE_ROUND_KEY) !== approvedRoundSnapshot) {
+              report('update-reload-blocked-round-changed'); return;
+            }
+          } catch (_) { report('update-reload-blocked-storage'); return; }
+        }
+        if (!refreshing) { refreshing = true; location.reload(); }
+      });
+      window.addEventListener('load', async () => {
+        try {
+          registration = await navigator.serviceWorker.register('./sw.js', {
+            updateViaCache: 'none'
+          });
+          report('registered');
+          registration.addEventListener('updatefound', () => {
+            const installing = registration.installing;
+            if (installing) installing.addEventListener('statechange', () => {
+              if (installing.state === 'installed') maybeActivateWaiting();
+            });
+          });
+          maybeActivateWaiting();
+          await checkForUpdate();
+        } catch (err) { report('registration-unavailable', { message: String(err) }); }
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') checkForUpdate();
+      });
+      window.addEventListener('pageshow', event => {
+        if (event.persisted) checkForUpdate();
+      });
+    })();
   </script>
 </body>
 </html>

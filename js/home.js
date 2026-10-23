@@ -1,3 +1,5 @@
+// Diagnostic release marker; no scoring logic changed.
+window.STRACKER_HOME_JS_RELEASE = '20261023-6';
 const API_BASE = 'https://api.opengolfapi.org/api/v1';
 /* Phase 3 account hook — current prototype is competitive. */
 const ACCOUNT_TYPE = 'competitive';
